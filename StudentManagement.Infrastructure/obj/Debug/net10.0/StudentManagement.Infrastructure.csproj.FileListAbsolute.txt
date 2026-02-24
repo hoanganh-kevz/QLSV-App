@@ -1,0 +1,17 @@
+C:\AppQLSV\StudentManagement.Infrastructure\bin\Debug\net10.0\StudentManagement.Infrastructure.deps.json
+C:\AppQLSV\StudentManagement.Infrastructure\bin\Debug\net10.0\StudentManagement.Infrastructure.runtimeconfig.json
+C:\AppQLSV\StudentManagement.Infrastructure\bin\Debug\net10.0\StudentManagement.Infrastructure.dll
+C:\AppQLSV\StudentManagement.Infrastructure\bin\Debug\net10.0\StudentManagement.Infrastructure.pdb
+C:\AppQLSV\StudentManagement.Infrastructure\bin\Debug\net10.0\StudentManagement.Core.dll
+C:\AppQLSV\StudentManagement.Infrastructure\bin\Debug\net10.0\StudentManagement.Core.pdb
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.csproj.AssemblyReference.cache
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.AssemblyInfoInputs.cache
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.AssemblyInfo.cs
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.csproj.CoreCompileInputs.cache
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentM.54534901.Up2Date
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.dll
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\refint\StudentManagement.Infrastructure.dll
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.pdb
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.genruntimeconfig.cache
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\ref\StudentManagement.Infrastructure.dll
