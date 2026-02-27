@@ -72,5 +72,10 @@ namespace StudentManagement.Core.Entities
                 @"^[^@\s]+@[^@\s]+\.[^@\s]+$"
             );
         }
+
+        public void SetAccount(string accountId)
+        {
+            AccountID = accountId;
+        }
     }
 }

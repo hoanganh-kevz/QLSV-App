@@ -10,9 +10,9 @@ C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Servic
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.AssemblyInfoInputs.cache
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.AssemblyInfo.cs
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.csproj.CoreCompileInputs.cache
+C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.sourcelink.json
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentM.2F42987C.Up2Date
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.dll
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\refint\StudentManagement.Services.dll
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.pdb
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\ref\StudentManagement.Services.dll
-C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.sourcelink.json

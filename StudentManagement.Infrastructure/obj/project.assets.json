@@ -1263,7 +1263,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "BCrypt.Net-Next": "4.1.0"
+          "BCrypt.Net-Next": "4.1.0",
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.3"
         },
         "compile": {
           "bin/placeholder/StudentManagement.Core.dll": {}

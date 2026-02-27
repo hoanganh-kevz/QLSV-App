@@ -33,6 +33,9 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
+              "C:\\AppQLSV\\StudentManagement.Infrastructure\\StudentManagement.Infrastructure.csproj": {
+                "projectPath": "C:\\AppQLSV\\StudentManagement.Infrastructure\\StudentManagement.Infrastructure.csproj"
+              },
               "C:\\AppQLSV\\StudentManagement.Services\\StudentManagement.Services.csproj": {
                 "projectPath": "C:\\AppQLSV\\StudentManagement.Services\\StudentManagement.Services.csproj"
               }
@@ -55,6 +58,10 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[10.0.2, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[10.0.2, )"
@@ -65,9 +72,21 @@
               "target": "Package",
               "version": "[10.0.3, )"
             },
-            "Swashbuckle.AspNetCore": {
+            "Serilog.AspNetCore": {
               "target": "Package",
-              "version": "[10.1.4, )"
+              "version": "[9.0.0, )"
+            },
+            "Serilog.Settings.Configuration": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[6.0.0, )"
             }
           },
           "imports": [
@@ -557,6 +576,10 @@
             "BCrypt.Net-Next": {
               "target": "Package",
               "version": "[4.1.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[10.0.3, )"
             }
           },
           "imports": [
@@ -1263,6 +1286,16 @@
       "frameworks": {
         "net10.0": {
           "targetAlias": "net10.0",
+          "dependencies": {
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.16.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.16.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -1,59 +1,41 @@
-using Microsoft.EntityFrameworkCore;
-using StudentManagement.Infrastructure.Data;
+using StudentManagement.API.Extensions;
+using StudentManagement.API.Middlewares;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ==================== Add Services ====================
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
-builder.Services.AddControllers();
+builder.Host.UseSerilog();
 
-// EF Core + SQL Server
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Swagger/OpenAPI
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "StudentManagement API", Version = "v1" });
-});
-
-// CORS cho Frontend
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
+// Add services to the container
+builder.Services.AddControllers().AddJsonOptions(options =>
     {
-        policy.WithOrigins(
-                "http://localhost:3000",  // React
-                "http://localhost:5173"   // Vite/Vue
-              )
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
-});
-
-// Đăng ký Services và Repositories tại đây
-// builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-// builder.Services.AddScoped<IStudentService, StudentService>();
+// Custom service configurations
+builder.Services.ConfigureDatabase(builder.Configuration);
+builder.Services.ConfigureRepositories();
+builder.Services.ConfigureServices();
+builder.Services.ConfigureJWT(builder.Configuration);
+builder.Services.ConfigureCors();
 
 var app = builder.Build();
 
-// ==================== Configure Pipeline ====================
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "StudentManagement API v1");
-        c.RoutePrefix = string.Empty; // Mở Swagger ngay tại https://localhost:{port}/
-    });
-}
+// Configure the HTTP request pipeline
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowFrontend"); // Phải đặt trước UseAuthorization
+app.UseCors("AllowAll");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
