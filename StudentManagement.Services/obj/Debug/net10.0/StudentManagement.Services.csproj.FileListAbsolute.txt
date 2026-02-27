@@ -15,3 +15,4 @@ C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Servic
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\refint\StudentManagement.Services.dll
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.pdb
 C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\ref\StudentManagement.Services.dll
+C:\AppQLSV\StudentManagement.Services\obj\Debug\net10.0\StudentManagement.Services.sourcelink.json

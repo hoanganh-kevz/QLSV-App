@@ -165,3 +165,5 @@ C:\AppQLSV\StudentManagement.API\obj\Debug\net10.0\refint\StudentManagement.API.
 C:\AppQLSV\StudentManagement.API\obj\Debug\net10.0\StudentManagement.API.pdb
 C:\AppQLSV\StudentManagement.API\obj\Debug\net10.0\StudentManagement.API.genruntimeconfig.cache
 C:\AppQLSV\StudentManagement.API\obj\Debug\net10.0\ref\StudentManagement.API.dll
+C:\AppQLSV\StudentManagement.API\obj\Debug\net10.0\StudentManagement.API.sourcelink.json
+C:\AppQLSV\StudentManagement.API\bin\Debug\net10.0\BCrypt.Net-Next.dll

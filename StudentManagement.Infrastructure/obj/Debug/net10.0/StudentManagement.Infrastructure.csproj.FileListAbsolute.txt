@@ -15,3 +15,4 @@ C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\refint\StudentMana
 C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.pdb
 C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.genruntimeconfig.cache
 C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\ref\StudentManagement.Infrastructure.dll
+C:\AppQLSV\StudentManagement.Infrastructure\obj\Debug\net10.0\StudentManagement.Infrastructure.sourcelink.json
