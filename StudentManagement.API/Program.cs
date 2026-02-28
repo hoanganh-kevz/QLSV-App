@@ -1,5 +1,6 @@
 using StudentManagement.API.Extensions;
 using StudentManagement.API.Middlewares;
+using StudentManagement.Infrastructure.Data;    
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,13 @@ builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.ConfigureCors();
 
 var app = builder.Build();
+
+if (args.Contains("--seed"))
+{
+    using var scope = app.Services.CreateScope();
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await SeedData.Initialize(context);
+}
 
 // Configure the HTTP request pipeline
 app.UseMiddleware<ExceptionMiddleware>();
