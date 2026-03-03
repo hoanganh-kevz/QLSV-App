@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="StudentManagement.API/StudentManagement.API.csproj" />
-  <Project Path="StudentManagement.Core/StudentManagement.Core.csproj" />
-  <Project Path="StudentManagement.Infrastructure/StudentManagement.Infrastructure.csproj" />
-  <Project Path="StudentManagement.Services/StudentManagement.Services.csproj" />
-</Solution>
