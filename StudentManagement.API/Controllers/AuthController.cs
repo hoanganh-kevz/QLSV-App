@@ -28,7 +28,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var result = await _authService.LoginAsync(loginDto);
+                AuthResponseDto result = await _authService.LoginAsync(loginDto);
                 _logger.LogInformation($"User {loginDto.Username} logged in successfully");
                 return Ok(result);
             }
@@ -48,7 +48,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var result = await _authService.RegisterAsync(registerDto);
+                AuthResponseDto result = await _authService.RegisterAsync(registerDto);
                 _logger.LogInformation($"New user {registerDto.Username} registered successfully");
                 return CreatedAtAction(nameof(GetProfile), new { }, result);
             }
@@ -65,11 +65,11 @@ namespace StudentManagement.API.Controllers
         [Authorize]
         public ActionResult<object> GetProfile()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
-            var role = User.FindFirst(ClaimTypes.Role)?.Value;
-            var fullName = User.FindFirst("FullName")?.Value;
-            var email = User.FindFirst("Email")?.Value;
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? username = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? role = User.FindFirst(ClaimTypes.Role)?.Value;
+            string? fullName = User.FindFirst("FullName")?.Value;
+            string? email = User.FindFirst("Email")?.Value;
 
             return Ok(new
             {
@@ -90,12 +90,12 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var accountId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                string? accountId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 
                 if (string.IsNullOrEmpty(accountId))
                     return Unauthorized();
 
-                var result = await _authService.ChangePasswordAsync(accountId, dto.CurrentPassword, dto.NewPassword);
+                bool result = await _authService.ChangePasswordAsync(accountId, dto.CurrentPassword, dto.NewPassword);
                 
                 return Ok(new { message = "Password changed successfully" });
             }

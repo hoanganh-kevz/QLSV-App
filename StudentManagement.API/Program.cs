@@ -3,7 +3,7 @@ using StudentManagement.API.Middlewares;
 using StudentManagement.Infrastructure.Data;    
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
@@ -27,12 +27,12 @@ builder.Services.ConfigureServices();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.ConfigureCors();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 if (args.Contains("--seed"))
 {
-    using var scope = app.Services.CreateScope();
-    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    using IServiceScope scope = app.Services.CreateScope();
+    AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await SeedData.Initialize(context);
 }
 

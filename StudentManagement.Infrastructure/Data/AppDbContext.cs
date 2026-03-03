@@ -15,6 +15,10 @@ namespace StudentManagement.Infrastructure.Data
         public DbSet<Student> Students { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Major> Majors { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,6 +60,11 @@ namespace StudentManagement.Infrastructure.Data
                 entity.Property(e => e.GPA).HasPrecision(3, 2);
                 entity.Property(e => e.Tuition).HasPrecision(18, 2);
                 entity.Property(e => e.DebtAmount).HasPrecision(18, 2);
+
+                entity.HasOne(e => e.Class)
+                      .WithMany(c => c.Students)
+                      .HasForeignKey(e => e.ClassID)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
             
             // Teacher configuration
@@ -68,6 +77,50 @@ namespace StudentManagement.Infrastructure.Data
             modelBuilder.Entity<Admin>(entity =>
             {
                 entity.HasIndex(e => e.AdminCode).IsUnique();
+            });
+
+            // Department configuration
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.HasIndex(e => e.DepartmentName).IsUnique();
+                entity.HasOne(e => e.Dean)
+                      .WithMany()
+                      .HasForeignKey(e => e.DeanID)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Major configuration
+            modelBuilder.Entity<Major>(entity =>
+            {
+                entity.HasIndex(e => e.MajorCode).IsUnique();
+                entity.HasOne(e => e.Department)
+                      .WithMany(d => d.Majors)
+                      .HasForeignKey(e => e.DepartmentID)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Class configuration
+            modelBuilder.Entity<Class>(entity =>
+            {
+                entity.HasIndex(e => e.ClassName).IsUnique();
+                entity.HasOne(e => e.Major)
+                      .WithMany(m => m.Classes)
+                      .HasForeignKey(e => e.MajorID)
+                      .OnDelete(DeleteBehavior.SetNull);
+                entity.HasOne(e => e.Advisor)
+                      .WithMany()
+                      .HasForeignKey(e => e.AdvisorID)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // Subject configuration
+            modelBuilder.Entity<Subject>(entity =>
+            {
+                entity.HasIndex(e => e.SubjectCode).IsUnique();
+                entity.HasOne(e => e.Department)
+                      .WithMany(d => d.Subjects)
+                      .HasForeignKey(e => e.DepartmentID)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
         }
     }

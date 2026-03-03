@@ -77,5 +77,19 @@ namespace StudentManagement.Core.Entities
         {
             AccountID = accountId;
         }
+
+        public void UpdatePersonInfo(string fullName, string email, string phoneNumber,
+                                     DateTime dateOfBirth, Gender gender,
+                                     string? address = null, string? nationality = null, string? idCard = null)
+        {
+            FullName = fullName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            DateOfBirth = dateOfBirth;
+            Gender = gender;
+            Address = address;
+            if (nationality != null) Nationality = nationality;
+            IdCard = idCard;
+        }
     }
 }

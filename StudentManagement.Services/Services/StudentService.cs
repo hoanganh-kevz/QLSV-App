@@ -21,7 +21,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<StudentDto> GetByIdAsync(string studentId)
         {
-            var student = await _unitOfWork.Repository<Student>()
+            Student? student = await _unitOfWork.Repository<Student>()
                 .FirstOrDefaultAsync(s => s.Id == studentId);
 
             if (student == null)
@@ -32,7 +32,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<StudentDto> GetByCodeAsync(string studentCode)
         {
-            var student = await _unitOfWork.Repository<Student>()
+            Student? student = await _unitOfWork.Repository<Student>()
                 .FirstOrDefaultAsync(s => s.StudentCode == studentCode);
 
             if (student == null)
@@ -43,8 +43,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<PagedStudentResult> GetAllAsync(StudentSearchDto searchDto)
         {
-            var query = _unitOfWork.Repository<Student>().FindAsync(s => true);
-            var students = await query;
+            IEnumerable<Student> students = await _unitOfWork.Repository<Student>().FindAsync(s => true);
 
             // Apply filters
             if (!string.IsNullOrEmpty(searchDto.Keyword))
@@ -75,7 +74,7 @@ namespace StudentManagement.Services.Services
                 students = students.Where(s => s.GPA <= searchDto.MaxGPA.Value);
 
             // Get total count
-            var totalCount = students.Count();
+            int totalCount = students.Count();
 
             // Apply sorting
             students = searchDto.SortBy?.ToLower() switch
@@ -90,12 +89,12 @@ namespace StudentManagement.Services.Services
             };
 
             // Apply pagination
-            var pagedStudents = students
+            List<Student> pagedStudents = students
                 .Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
                 .Take(searchDto.PageSize)
                 .ToList();
 
-            var studentDtos = _mapper.Map<List<StudentListDto>>(pagedStudents);
+            List<StudentListDto> studentDtos = _mapper.Map<List<StudentListDto>>(pagedStudents);
 
             return new PagedStudentResult
             {
@@ -120,15 +119,15 @@ namespace StudentManagement.Services.Services
             try
             {
                 // Generate student code
-                var studentCode = await GenerateStudentCodeAsync();
+                string studentCode = await GenerateStudentCodeAsync();
 
                 // Create account
-                var account = new Account(createDto.Username, createDto.Password, AccountRole.Student);
+                Account account = new Account(createDto.Username, createDto.Password, AccountRole.Student);
                 await _unitOfWork.Repository<Account>().AddAsync(account);
                 await _unitOfWork.SaveChangesAsync();
 
                 // Create student
-                var student = new Student(
+                Student student = new Student(
                     createDto.FullName,
                     createDto.Email,
                     createDto.PhoneNumber,
@@ -140,7 +139,7 @@ namespace StudentManagement.Services.Services
                 );
 
                 student.SetAccount(account.AccountID);
-                student.SetClassAndMajor(createDto.ClassID ?? string.Empty, createDto.MajorID ?? string.Empty);
+                student.SetClassAndMajor(createDto.ClassID, createDto.MajorID);
 
                 await _unitOfWork.Repository<Student>().AddAsync(student);
                 await _unitOfWork.SaveChangesAsync();
@@ -158,17 +157,34 @@ namespace StudentManagement.Services.Services
 
         public async Task<StudentDto> UpdateAsync(string studentId, UpdateStudentDto updateDto)
         {
-            var student = await _unitOfWork.Repository<Student>()
+            Student? student = await _unitOfWork.Repository<Student>()
                 .FirstOrDefaultAsync(s => s.Id == studentId);
 
             if (student == null)
                 throw new KeyNotFoundException($"Student with ID {studentId} not found");
 
-            // Update properties manually (can't use AutoMapper directly due to encapsulation)
-            // Note: In real implementation, add public setters or Update methods in Student class
+            // Update person info via domain method (handles protected setters)
+            student.UpdatePersonInfo(
+                updateDto.FullName,
+                updateDto.Email,
+                updateDto.PhoneNumber,
+                updateDto.DateOfBirth,
+                updateDto.Gender,
+                updateDto.Address,
+                updateDto.Nationality,
+                updateDto.IdCard
+            );
 
-            _mapper.Map(updateDto, student);
-            
+            // Update student-specific fields
+            student.SetClassAndMajor(
+                updateDto.ClassID ?? student.ClassID,
+                updateDto.MajorID ?? student.MajorID
+            );
+            student.SetStatus(updateDto.Status);
+
+            if (updateDto.Avatar != null)
+                student.SetAvatar(updateDto.Avatar);
+
             await _unitOfWork.Repository<Student>().UpdateAsync(student);
             await _unitOfWork.SaveChangesAsync();
 
@@ -177,7 +193,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<bool> DeleteAsync(string studentId)
         {
-            var student = await _unitOfWork.Repository<Student>()
+            Student? student = await _unitOfWork.Repository<Student>()
                 .FirstOrDefaultAsync(s => s.Id == studentId);
 
             if (student == null)
@@ -195,7 +211,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<List<StudentListDto>> GetByClassAsync(string classId)
         {
-            var students = await _unitOfWork.Repository<Student>()
+            IEnumerable<Student> students = await _unitOfWork.Repository<Student>()
                 .FindAsync(s => s.ClassID == classId);
 
             return _mapper.Map<List<StudentListDto>>(students);
@@ -209,7 +225,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<bool> UpdateAvatarAsync(string studentId, string avatarUrl)
         {
-            var student = await _unitOfWork.Repository<Student>()
+            Student? student = await _unitOfWork.Repository<Student>()
                 .FirstOrDefaultAsync(s => s.Id == studentId);
 
             if (student == null)
@@ -223,7 +239,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<bool> UpdateGPAAsync(string studentId, decimal gpa)
         {
-            var student = await _unitOfWork.Repository<Student>()
+            Student? student = await _unitOfWork.Repository<Student>()
                 .FirstOrDefaultAsync(s => s.Id == studentId);
 
             if (student == null)
@@ -237,13 +253,13 @@ namespace StudentManagement.Services.Services
 
         public async Task<StudentDto> ChangeClassAsync(string studentId, string newClassId)
         {
-            var student = await _unitOfWork.Repository<Student>()
+            Student? student = await _unitOfWork.Repository<Student>()
                 .FirstOrDefaultAsync(s => s.Id == studentId);
 
             if (student == null)
                 throw new KeyNotFoundException($"Student with ID {studentId} not found");
 
-            student.SetClassAndMajor(newClassId, student.MajorID ?? string.Empty);
+            student.SetClassAndMajor(newClassId, student.MajorID);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<StudentDto>(student);
         }
@@ -256,10 +272,10 @@ namespace StudentManagement.Services.Services
 
         public async Task<List<StudentListDto>> GetTopStudentsAsync(int limit = 10)
         {
-            var students = await _unitOfWork.Repository<Student>()
+            IEnumerable<Student> students = await _unitOfWork.Repository<Student>()
                 .FindAsync(s => s.Status == StudentStatus.Active);
 
-            var topStudents = students
+            List<Student> topStudents = students
                 .OrderByDescending(s => s.GPA)
                 .Take(limit)
                 .ToList();
@@ -269,9 +285,9 @@ namespace StudentManagement.Services.Services
 
         private async Task<string> GenerateStudentCodeAsync()
         {
-            var year = DateTime.Now.Year % 100; // 24 for 2024
-            var month = DateTime.Now.Month;
-            var count = await _unitOfWork.Repository<Student>().CountAsync();
+            int year = DateTime.Now.Year % 100; // 24 for 2024
+            int month = DateTime.Now.Month;
+            int count = await _unitOfWork.Repository<Student>().CountAsync();
             
             return $"{year:D2}{month:D2}{(count + 1):D6}"; // e.g., 2402000001
         }

@@ -76,10 +76,15 @@ namespace StudentManagement.Core.Entities
             Avatar = avatarUrl;
         }
         
-        public void SetClassAndMajor(string classId, string majorId)
+        public void SetClassAndMajor(string? classId, string? majorId)
         {
             ClassID = classId;
             MajorID = majorId;
+        }
+
+        public void SetStatus(StudentStatus status)
+        {
+            Status = status;
         }
         
         public bool IsEligibleForGraduation()
@@ -99,5 +104,8 @@ namespace StudentManagement.Core.Entities
                 _ => "Probation"
             };
         }
+
+        // Add navigation property
+public virtual Class? Class { get; set; }
     }
 }

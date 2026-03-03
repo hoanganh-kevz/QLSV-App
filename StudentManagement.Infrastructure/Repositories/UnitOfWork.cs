@@ -18,11 +18,11 @@ namespace StudentManagement.Infrastructure.Repositories
 
         public IGenericRepository<T> Repository<T>() where T : class
         {
-            var type = typeof(T);
+            Type type = typeof(T);
             
             if (!_repositories.ContainsKey(type))
             {
-                var repositoryInstance = new GenericRepository<T>(_context);
+                GenericRepository<T> repositoryInstance = new GenericRepository<T>(_context);
                 _repositories.Add(type, repositoryInstance);
             }
             

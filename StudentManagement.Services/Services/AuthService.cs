@@ -24,7 +24,7 @@ namespace StudentManagement.Services.Services
         public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
         {
             // Find account by username
-            var account = await _unitOfWork.Repository<Account>()
+            Account? account = await _unitOfWork.Repository<Account>()
                 .FirstOrDefaultAsync(a => a.Username == loginDto.Username);
 
             if (account == null || !account.IsActive)
@@ -39,7 +39,7 @@ namespace StudentManagement.Services.Services
             }
 
             // Get associated person
-            var person = await _unitOfWork.Repository<Person>()
+            Person? person = await _unitOfWork.Repository<Person>()
                 .FirstOrDefaultAsync(p => p.AccountID == account.AccountID);
 
             if (person == null)
@@ -50,8 +50,8 @@ namespace StudentManagement.Services.Services
             await _unitOfWork.SaveChangesAsync();
 
             // Generate token
-            var token = _jwtHelper.GenerateToken(account, person);
-            var expiryMinutes = Convert.ToDouble(_configuration["JwtSettings:ExpiryMinutes"]);
+            string token = _jwtHelper.GenerateToken(account, person);
+            double expiryMinutes = Convert.ToDouble(_configuration["JwtSettings:ExpiryMinutes"]);
 
             return new AuthResponseDto
             {
@@ -67,14 +67,14 @@ namespace StudentManagement.Services.Services
         public async Task<AuthResponseDto> RegisterAsync(RegisterDto registerDto)
         {
             // Check if username exists
-            var existingAccount = await _unitOfWork.Repository<Account>()
+            Account? existingAccount = await _unitOfWork.Repository<Account>()
                 .FirstOrDefaultAsync(a => a.Username == registerDto.Username);
 
             if (existingAccount != null)
                 throw new InvalidOperationException("Username already exists");
 
             // Check if email exists
-            var existingPerson = await _unitOfWork.Repository<Person>()
+            Person? existingPerson = await _unitOfWork.Repository<Person>()
                 .FirstOrDefaultAsync(p => p.Email == registerDto.Email);
 
             if (existingPerson != null)
@@ -85,7 +85,7 @@ namespace StudentManagement.Services.Services
             try
             {
                 // Create account
-                var account = new Account(registerDto.Username, registerDto.Password, registerDto.Role);
+                Account account = new Account(registerDto.Username, registerDto.Password, registerDto.Role);
                 await _unitOfWork.Repository<Account>().AddAsync(account);
                 await _unitOfWork.SaveChangesAsync();
 
@@ -94,7 +94,7 @@ namespace StudentManagement.Services.Services
                 switch (registerDto.Role)
                 {
                     case AccountRole.Student:
-                        var studentCode = GenerateStudentCode();
+                        string studentCode = GenerateStudentCode();
                         person = new Student(
                             registerDto.FullName,
                             registerDto.Email,
@@ -108,7 +108,7 @@ namespace StudentManagement.Services.Services
                         break;
 
                     case AccountRole.Teacher:
-                        var teacherCode = GenerateTeacherCode();
+                        string teacherCode = GenerateTeacherCode();
                         person = new Teacher(
                             registerDto.FullName,
                             registerDto.Email,
@@ -121,7 +121,7 @@ namespace StudentManagement.Services.Services
                         break;
 
                     case AccountRole.Admin:
-                        var adminCode = GenerateAdminCode();
+                        string adminCode = GenerateAdminCode();
                         person = new Admin(
                             registerDto.FullName,
                             registerDto.Email,
@@ -146,8 +146,8 @@ namespace StudentManagement.Services.Services
                 await _unitOfWork.CommitTransactionAsync();
 
                 // Generate token
-                var token = _jwtHelper.GenerateToken(account, person);
-                var expiryMinutes = Convert.ToDouble(_configuration["JwtSettings:ExpiryMinutes"]);
+                string token = _jwtHelper.GenerateToken(account, person);
+                double expiryMinutes = Convert.ToDouble(_configuration["JwtSettings:ExpiryMinutes"]);
 
                 return new AuthResponseDto
                 {
@@ -168,7 +168,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<bool> ChangePasswordAsync(string accountId, string currentPassword, string newPassword)
         {
-            var account = await _unitOfWork.Repository<Account>().GetByIdAsync(accountId);
+            Account? account = await _unitOfWork.Repository<Account>().GetByIdAsync(accountId);
 
             if (account == null)
                 throw new InvalidOperationException("Account not found");
@@ -185,22 +185,23 @@ namespace StudentManagement.Services.Services
         private string GenerateStudentCode()
         {
             // Format: YYMM + 6 digit random (e.g., 240100001)
-            var prefix = DateTime.Now.ToString("yyMM");
-            var random = new Random().Next(100000, 999999);
-            return $"{prefix}{random}";
+            string prefix = DateTime.Now.ToString("yyMM");
+            Random random = new Random();
+            int randomNumber = random.Next(100000, 999999);
+            return $"{prefix}{randomNumber}";
         }
 
         private string GenerateTeacherCode()
         {
             // Format: GV + 6 digit (e.g., GV000001)
-            var count = _unitOfWork.Repository<Teacher>().CountAsync().Result;
+            int count = _unitOfWork.Repository<Teacher>().CountAsync().Result;
             return $"GV{(count + 1):D6}";
         }
 
         private string GenerateAdminCode()
         {
             // Format: AD + 6 digit (e.g., AD000001)
-            var count = _unitOfWork.Repository<Admin>().CountAsync().Result;
+            int count = _unitOfWork.Repository<Admin>().CountAsync().Result;
             return $"AD{(count + 1):D6}";
         }
     }

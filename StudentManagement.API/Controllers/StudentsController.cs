@@ -28,7 +28,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var result = await _studentService.GetAllAsync(searchDto);
+                PagedStudentResult result = await _studentService.GetAllAsync(searchDto);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var student = await _studentService.GetByIdAsync(id);
+                StudentDto student = await _studentService.GetByIdAsync(id);
                 return Ok(student);
             }
             catch (KeyNotFoundException ex)
@@ -68,7 +68,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var student = await _studentService.GetByCodeAsync(code);
+                StudentDto student = await _studentService.GetByCodeAsync(code);
                 return Ok(student);
             }
             catch (KeyNotFoundException ex)
@@ -91,7 +91,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var students = await _studentService.GetByClassAsync(classId);
+                List<StudentListDto> students = await _studentService.GetByClassAsync(classId);
                 return Ok(students);
             }
             catch (Exception ex)
@@ -109,7 +109,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var students = await _studentService.GetTopStudentsAsync(limit);
+                List<StudentListDto> students = await _studentService.GetTopStudentsAsync(limit);
                 return Ok(students);
             }
             catch (Exception ex)
@@ -131,7 +131,7 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                var student = await _studentService.CreateAsync(createDto);
+                StudentDto student = await _studentService.CreateAsync(createDto);
                 return CreatedAtAction(nameof(GetById), new { id = student.StudentID }, student);
             }
             catch (InvalidOperationException ex)
@@ -154,7 +154,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var exists = await _studentService.ExistsAsync(code);
+                bool exists = await _studentService.ExistsAsync(code);
                 return Ok(new { exists });
             }
             catch (Exception ex)
@@ -176,7 +176,7 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                var student = await _studentService.UpdateAsync(id, updateDto);
+                StudentDto student = await _studentService.UpdateAsync(id, updateDto);
                 return Ok(student);
             }
             catch (KeyNotFoundException ex)
@@ -198,7 +198,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var success = await _studentService.UpdateAvatarAsync(id, avatarDto.AvatarUrl);
+                bool success = await _studentService.UpdateAvatarAsync(id, avatarDto.AvatarUrl);
                 
                 if (!success)
                     return NotFound(new { message = "Student not found" });
@@ -221,7 +221,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var student = await _studentService.ChangeClassAsync(id, classDto.NewClassID);
+                StudentDto student = await _studentService.ChangeClassAsync(id, classDto.NewClassID);
                 return Ok(student);
             }
             catch (KeyNotFoundException ex)
@@ -244,7 +244,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var success = await _studentService.DeleteAsync(id);
+                bool success = await _studentService.DeleteAsync(id);
                 
                 if (!success)
                     return NotFound(new { message = "Student not found" });

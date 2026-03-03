@@ -18,11 +18,11 @@ namespace StudentManagement.Services.Helpers
 
         public string GenerateToken(Account account, Person person)
         {
-            var securityKey = new SymmetricSecurityKey(
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]!));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            Claim[] claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, account.AccountID),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -33,7 +33,7 @@ namespace StudentManagement.Services.Helpers
                 new Claim("Email", person.Email)
             };
 
-            var token = new JwtSecurityToken(
+            JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
                 claims: claims,
@@ -47,12 +47,12 @@ namespace StudentManagement.Services.Helpers
 
         public ClaimsPrincipal? ValidateToken(string token)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]!);
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            byte[] key = Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"]!);
 
             try
             {
-                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                ClaimsPrincipal principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),

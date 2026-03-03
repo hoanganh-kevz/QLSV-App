@@ -59,7 +59,7 @@ namespace StudentManagement.API.Middlewares
 
             context.Response.StatusCode = (int)statusCode;
 
-            var result = JsonSerializer.Serialize(new
+            string result = JsonSerializer.Serialize(new
             {
                 error = message,
                 statusCode = (int)statusCode,

@@ -34,14 +34,16 @@ namespace StudentManagement.API.Extensions
         {
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IClassService, ClassService>();
+            services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<JwtHelper>();
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
         }
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["Secret"];
+            IConfigurationSection jwtSettings = configuration.GetSection("JwtSettings");
+            string? secretKey = jwtSettings["Secret"];
 
             services.AddAuthentication(opt =>
             {
