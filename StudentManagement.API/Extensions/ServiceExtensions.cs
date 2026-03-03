@@ -8,6 +8,7 @@ using StudentManagement.Infrastructure.Repositories;
 using StudentManagement.Services.Helpers;
 using StudentManagement.Services.Services;
 using System.Text;
+using StudentManagement.Services.Mappings;
 
 namespace StudentManagement.API.Extensions
 {
@@ -32,7 +33,9 @@ namespace StudentManagement.API.Extensions
         public static void ConfigureServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<JwtHelper>();
+            services.AddAutoMapper(typeof(MappingProfile).Assembly);
         }
 
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)

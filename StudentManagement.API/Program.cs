@@ -49,3 +49,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// dotnet run --project StudentManagement.API
