@@ -1,0 +1,16 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Compiled files
+*.dll
+*.exe
+*.pdb
+
+# ASP.NET Core
+appsettings.Development.json
