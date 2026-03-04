@@ -2,7 +2,7 @@
 using StudentManagement.Core.Interfaces;
 using StudentManagement.Services.Interfaces;
 
-namespace StudentManagement.Services;
+namespace StudentManagement.Services.Implementations;
 
 public class StudentService : IStudentService
 {

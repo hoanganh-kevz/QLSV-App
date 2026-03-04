@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using StudentManagement.Core.Interfaces;
 using StudentManagement.Infrastructure.Data;
 using StudentManagement.Infrastructure.Repositories;
-using StudentManagement.Services;
+using StudentManagement.Services.Implementations;
 using StudentManagement.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
