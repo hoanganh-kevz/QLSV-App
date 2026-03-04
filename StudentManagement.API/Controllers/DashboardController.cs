@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StudentManagement.Core.Interfaces.Repositories;
-using StudentManagement.Core.Entities;
+using StudentManagement.Core.Interfaces.Services;
 
 namespace StudentManagement.API.Controllers
 {
@@ -10,28 +9,18 @@ namespace StudentManagement.API.Controllers
     [Authorize]
     public class DashboardController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IDashboardService _dashboardService;
 
-        public DashboardController(IUnitOfWork unitOfWork)
+        public DashboardController(IDashboardService dashboardService)
         {
-            _unitOfWork = unitOfWork;
+            _dashboardService = dashboardService;
         }
 
         [HttpGet("stats")]
         public async Task<IActionResult> GetStats()
         {
-            int totalStudents = await _unitOfWork.Repository<Student>().CountAsync();
-            int totalTeachers = await _unitOfWork.Repository<Teacher>().CountAsync();
-            int totalClasses = await _unitOfWork.Repository<Class>().CountAsync();
-            int totalSubjects = await _unitOfWork.Repository<Subject>().CountAsync();
-
-            return Ok(new
-            {
-                totalStudents,
-                totalTeachers,
-                totalClasses,
-                totalSubjects
-            });
+            var stats = await _dashboardService.GetAdvancedStatsAsync();
+            return Ok(stats);
         }
     }
 }
