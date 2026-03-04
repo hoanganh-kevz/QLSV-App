@@ -32,6 +32,9 @@ namespace StudentManagement.Core.Entities
         [MaxLength(255)]
         public string? ResearchArea { get; private set; }
         
+        // Navigation properties
+        public virtual Department? Department { get; set; }
+        
         // Constructor
         private Teacher() : base() { }
         
@@ -61,6 +64,14 @@ namespace StudentManagement.Core.Entities
         {
             Position = position;
             Degree = degree;
+        }
+
+        public void UpdateTeacherInfo(string? officeRoom, string? consultingHours, string? researchArea, string? employmentType)
+        {
+            if (officeRoom != null) OfficeRoom = officeRoom;
+            if (consultingHours != null) ConsultingHours = consultingHours;
+            if (researchArea != null) ResearchArea = researchArea;
+            if (employmentType != null) EmploymentType = employmentType;
         }
     }
 }

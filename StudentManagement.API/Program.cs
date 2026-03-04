@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using StudentManagement.API.Extensions;
 using StudentManagement.API.Middlewares;
 using StudentManagement.Infrastructure.Data;    
@@ -33,6 +34,7 @@ if (args.Contains("--seed"))
 {
     using IServiceScope scope = app.Services.CreateScope();
     AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
     await SeedData.Initialize(context);
 }
 

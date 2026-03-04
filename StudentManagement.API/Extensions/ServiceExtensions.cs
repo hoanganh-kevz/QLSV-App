@@ -36,6 +36,8 @@ namespace StudentManagement.API.Extensions
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IClassService, ClassService>();
             services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<IGradeService, GradeService>();
+            services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<JwtHelper>();
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
         }

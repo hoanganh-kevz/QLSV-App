@@ -149,6 +149,7 @@ namespace StudentManagement.Infrastructure.Data
             await context.SaveChangesAsync();
 
             // ── 7. Create Students ──
+            List<Student> students = new List<Student>();
             for (int i = 1; i <= 20; i++)
             {
                 Account studentAccount = new Account($"student{i}", "student123", AccountRole.Student);
@@ -170,15 +171,52 @@ namespace StudentManagement.Infrastructure.Data
                     classes[(i - 1) % classes.Count].ClassID,
                     majors[(i - 1) % majors.Count].MajorID
                 );
+                students.Add(student);
                 context.Students.Add(student);
             }
 
             await context.SaveChangesAsync();
 
+            // ── 8. Create CourseSections ──
+            List<string> studentIds = students.Select(s => s.Id).ToList();
+            List<CourseSection> sections = new List<CourseSection>();
+            for (int i = 0; i < 5; i++)
+            {
+                CourseSection section = new CourseSection
+                {
+                    SubjectID = subjects[i].SubjectID,
+                    TeacherID = teachers[i % teachers.Count].Id,
+                    Semester = 1,
+                    AcademicYear = "2024-2025",
+                    Schedule = $"T{(i + 2)}: 7:00-9:30",
+                    MaxStudents = 50,
+                    Status = "InProgress"
+                };
+                sections.Add(section);
+                context.CourseSections.Add(section);
+            }
+            await context.SaveChangesAsync();
+
+            // ── 9. Create Enrollments ──
+            List<Enrollment> enrollments = new List<Enrollment>();
+            for (int i = 0; i < studentIds.Count && i < 10; i++)
+            {
+                Enrollment enrollment = new Enrollment
+                {
+                    StudentID = studentIds[i],
+                    SectionID = sections[i % sections.Count].SectionID,
+                    Status = "Registered"
+                };
+                enrollments.Add(enrollment);
+                context.Enrollments.Add(enrollment);
+            }
+            await context.SaveChangesAsync();
+
             Console.WriteLine("Database seeded successfully!");
             Console.WriteLine($"Created: 1 Admin, {teachers.Count} Teachers, 20 Students, " +
                               $"{departments.Count} Departments, {majors.Count} Majors, " +
-                              $"{subjects.Count} Subjects, {classes.Count} Classes");
+                              $"{subjects.Count} Subjects, {classes.Count} Classes, " +
+                              $"{sections.Count} Sections, {enrollments.Count} Enrollments");
         }
     }
 }

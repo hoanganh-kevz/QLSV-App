@@ -43,12 +43,12 @@ namespace StudentManagement.Services.Services
 
         public async Task<PagedStudentResult> GetAllAsync(StudentSearchDto searchDto)
         {
-            IEnumerable<Student> students = await _unitOfWork.Repository<Student>().FindAsync(s => true);
+            var query = _unitOfWork.Repository<Student>().GetQueryable();
 
             // Apply filters
             if (!string.IsNullOrEmpty(searchDto.Keyword))
             {
-                students = students.Where(s =>
+                query = query.Where(s =>
                     s.StudentCode.Contains(searchDto.Keyword) ||
                     s.FullName.Contains(searchDto.Keyword) ||
                     s.Email.Contains(searchDto.Keyword)
@@ -56,43 +56,46 @@ namespace StudentManagement.Services.Services
             }
 
             if (!string.IsNullOrEmpty(searchDto.ClassID))
-                students = students.Where(s => s.ClassID == searchDto.ClassID);
+                query = query.Where(s => s.ClassID == searchDto.ClassID);
 
             if (!string.IsNullOrEmpty(searchDto.MajorID))
-                students = students.Where(s => s.MajorID == searchDto.MajorID);
+                query = query.Where(s => s.MajorID == searchDto.MajorID);
 
             if (!string.IsNullOrEmpty(searchDto.Status))
-                students = students.Where(s => s.Status.ToString() == searchDto.Status);
+            {
+                if (Enum.TryParse<StudentStatus>(searchDto.Status, out var statusEnum))
+                    query = query.Where(s => s.Status == statusEnum);
+            }
 
             if (searchDto.EnrollmentYear.HasValue)
-                students = students.Where(s => s.EnrollmentYear == searchDto.EnrollmentYear.Value);
+                query = query.Where(s => s.EnrollmentYear == searchDto.EnrollmentYear.Value);
 
             if (searchDto.MinGPA.HasValue)
-                students = students.Where(s => s.GPA >= searchDto.MinGPA.Value);
+                query = query.Where(s => s.GPA >= searchDto.MinGPA.Value);
 
             if (searchDto.MaxGPA.HasValue)
-                students = students.Where(s => s.GPA <= searchDto.MaxGPA.Value);
+                query = query.Where(s => s.GPA <= searchDto.MaxGPA.Value);
 
             // Get total count
-            int totalCount = students.Count();
+            int totalCount = await query.CountAsync();
 
             // Apply sorting
-            students = searchDto.SortBy?.ToLower() switch
+            query = searchDto.SortBy?.ToLower() switch
             {
                 "fullname" => searchDto.SortOrder == "desc" 
-                    ? students.OrderByDescending(s => s.FullName)
-                    : students.OrderBy(s => s.FullName),
+                    ? query.OrderByDescending(s => s.FullName)
+                    : query.OrderBy(s => s.FullName),
                 "gpa" => searchDto.SortOrder == "desc"
-                    ? students.OrderByDescending(s => s.GPA)
-                    : students.OrderBy(s => s.GPA),
-                _ => students.OrderBy(s => s.StudentCode)
+                    ? query.OrderByDescending(s => s.GPA)
+                    : query.OrderBy(s => s.GPA),
+                _ => query.OrderBy(s => s.StudentCode)
             };
 
-            // Apply pagination
-            List<Student> pagedStudents = students
+            // Apply pagination and execution
+            List<Student> pagedStudents = await query
                 .Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
                 .Take(searchDto.PageSize)
-                .ToList();
+                .ToListAsync();
 
             List<StudentListDto> studentDtos = _mapper.Map<List<StudentListDto>>(pagedStudents);
 
@@ -272,13 +275,12 @@ namespace StudentManagement.Services.Services
 
         public async Task<List<StudentListDto>> GetTopStudentsAsync(int limit = 10)
         {
-            IEnumerable<Student> students = await _unitOfWork.Repository<Student>()
-                .FindAsync(s => s.Status == StudentStatus.Active);
-
-            List<Student> topStudents = students
+            List<Student> topStudents = await _unitOfWork.Repository<Student>()
+                .GetQueryable()
+                .Where(s => s.Status == StudentStatus.Active)
                 .OrderByDescending(s => s.GPA)
                 .Take(limit)
-                .ToList();
+                .ToListAsync();
 
             return _mapper.Map<List<StudentListDto>>(topStudents);
         }

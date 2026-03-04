@@ -19,6 +19,10 @@ namespace StudentManagement.Infrastructure.Data
         public DbSet<Major> Majors { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<CourseSection> CourseSections { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Grade> Grades { get; set; }
+        public DbSet<GradeHistory> GradeHistories { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,6 +75,10 @@ namespace StudentManagement.Infrastructure.Data
             modelBuilder.Entity<Teacher>(entity =>
             {
                 entity.HasIndex(e => e.TeacherCode).IsUnique();
+                entity.HasOne(e => e.Department)
+                      .WithMany(d => d.Teachers)
+                      .HasForeignKey(e => e.DepartmentID)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
             
             // Admin configuration
@@ -121,6 +129,62 @@ namespace StudentManagement.Infrastructure.Data
                       .WithMany(d => d.Subjects)
                       .HasForeignKey(e => e.DepartmentID)
                       .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            // CourseSection configuration
+            modelBuilder.Entity<CourseSection>(entity =>
+            {
+                entity.HasKey(e => e.SectionID);
+                entity.HasOne(e => e.Subject)
+                      .WithMany()
+                      .HasForeignKey(e => e.SubjectID)
+                      .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne(e => e.Teacher)
+                      .WithMany()
+                      .HasForeignKey(e => e.TeacherID)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // Enrollment configuration
+            modelBuilder.Entity<Enrollment>(entity =>
+            {
+                entity.HasKey(e => e.EnrollmentID);
+                entity.HasOne(e => e.Student)
+                      .WithMany()
+                      .HasForeignKey(e => e.StudentID)
+                      .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne(e => e.Section)
+                      .WithMany(s => s.Enrollments)
+                      .HasForeignKey(e => e.SectionID)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // Grade configuration
+            modelBuilder.Entity<Grade>(entity =>
+            {
+                entity.HasKey(e => e.GradeID);
+                entity.HasOne(e => e.Enrollment)
+                      .WithOne(e => e.Grade)
+                      .HasForeignKey<Grade>(e => e.EnrollmentID)
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.Student)
+                      .WithMany()
+                      .HasForeignKey(e => e.StudentID)
+                      .OnDelete(DeleteBehavior.NoAction);
+                entity.HasOne(e => e.Subject)
+                      .WithMany()
+                      .HasForeignKey(e => e.SubjectID)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // GradeHistory configuration
+            modelBuilder.Entity<GradeHistory>(entity =>
+            {
+                entity.HasKey(e => e.HistoryID);
+                entity.HasOne(e => e.Grade)
+                      .WithMany(g => g.GradeHistories)
+                      .HasForeignKey(e => e.GradeID)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

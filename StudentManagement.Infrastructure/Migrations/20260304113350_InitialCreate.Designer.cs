@@ -12,7 +12,7 @@ using StudentManagement.Infrastructure.Data;
 namespace StudentManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260303030205_InitialCreate")]
+    [Migration("20260304113350_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -105,6 +105,50 @@ namespace StudentManagement.Infrastructure.Migrations
                     b.ToTable("Classes");
                 });
 
+            modelBuilder.Entity("StudentManagement.Core.Entities.CourseSection", b =>
+                {
+                    b.Property<string>("SectionID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("MaxStudents")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Schedule")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Semester")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TeacherID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("SectionID");
+
+                    b.HasIndex("SubjectID");
+
+                    b.HasIndex("TeacherID");
+
+                    b.ToTable("CourseSections");
+                });
+
             modelBuilder.Entity("StudentManagement.Core.Entities.Department", b =>
                 {
                     b.Property<string>("DepartmentID")
@@ -142,6 +186,144 @@ namespace StudentManagement.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Enrollment", b =>
+                {
+                    b.Property<string>("EnrollmentID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("AttendanceRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SectionID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EnrollmentID");
+
+                    b.HasIndex("SectionID");
+
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("Enrollments");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Grade", b =>
+                {
+                    b.Property<string>("GradeID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<decimal?>("AttendanceScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnrollmentID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("FinalScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<decimal>("GradePoint")
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<string>("LetterGrade")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<decimal?>("MidtermScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<int>("Semester")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SubjectID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("TotalScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GradeID");
+
+                    b.HasIndex("EnrollmentID")
+                        .IsUnique();
+
+                    b.HasIndex("StudentID");
+
+                    b.HasIndex("SubjectID");
+
+                    b.ToTable("Grades");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.GradeHistory", b =>
+                {
+                    b.Property<string>("HistoryID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Component")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("GradeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("NewValue")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<decimal>("OldValue")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("HistoryID");
+
+                    b.HasIndex("GradeID");
+
+                    b.ToTable("GradeHistories");
                 });
 
             modelBuilder.Entity("StudentManagement.Core.Entities.Major", b =>
@@ -450,6 +632,25 @@ namespace StudentManagement.Infrastructure.Migrations
                     b.Navigation("Major");
                 });
 
+            modelBuilder.Entity("StudentManagement.Core.Entities.CourseSection", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Core.Entities.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("Teacher");
+                });
+
             modelBuilder.Entity("StudentManagement.Core.Entities.Department", b =>
                 {
                     b.HasOne("StudentManagement.Core.Entities.Teacher", "Dean")
@@ -458,6 +659,63 @@ namespace StudentManagement.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Dean");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Enrollment", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.CourseSection", "Section")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("SectionID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Core.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Section");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Grade", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Enrollment", "Enrollment")
+                        .WithOne("Grade")
+                        .HasForeignKey("StudentManagement.Core.Entities.Grade", "EnrollmentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Core.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Core.Entities.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Enrollment");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.GradeHistory", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Grade", "Grade")
+                        .WithMany("GradeHistories")
+                        .HasForeignKey("GradeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
                 });
 
             modelBuilder.Entity("StudentManagement.Core.Entities.Major", b =>
@@ -506,9 +764,12 @@ namespace StudentManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("StudentManagement.Core.Entities.Teacher", b =>
                 {
-                    b.HasOne("StudentManagement.Core.Entities.Department", null)
+                    b.HasOne("StudentManagement.Core.Entities.Department", "Department")
                         .WithMany("Teachers")
-                        .HasForeignKey("DepartmentID");
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("StudentManagement.Core.Entities.Account", b =>
@@ -521,6 +782,11 @@ namespace StudentManagement.Infrastructure.Migrations
                     b.Navigation("Students");
                 });
 
+            modelBuilder.Entity("StudentManagement.Core.Entities.CourseSection", b =>
+                {
+                    b.Navigation("Enrollments");
+                });
+
             modelBuilder.Entity("StudentManagement.Core.Entities.Department", b =>
                 {
                     b.Navigation("Majors");
@@ -528,6 +794,16 @@ namespace StudentManagement.Infrastructure.Migrations
                     b.Navigation("Subjects");
 
                     b.Navigation("Teachers");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Enrollment", b =>
+                {
+                    b.Navigation("Grade");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Grade", b =>
+                {
+                    b.Navigation("GradeHistories");
                 });
 
             modelBuilder.Entity("StudentManagement.Core.Entities.Major", b =>

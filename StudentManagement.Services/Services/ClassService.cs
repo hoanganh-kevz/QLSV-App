@@ -2,6 +2,7 @@ using AutoMapper;
 using StudentManagement.Core.DTOs.Class;
 using StudentManagement.Core.DTOs.Student;
 using StudentManagement.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using StudentManagement.Core.Interfaces.Repositories;
 using StudentManagement.Core.Interfaces.Services;
 
@@ -35,20 +36,18 @@ namespace StudentManagement.Services.Services
 
         public async Task<List<ClassListDto>> GetAllAsync()
         {
-            IEnumerable<Class> classes = await _unitOfWork.Repository<Class>().GetAllAsync();
-            
-            List<ClassListDto> classDtos = classes.Select(c => new ClassListDto
-            {
-                ClassID = c.ClassID,
-                ClassName = c.ClassName,
-                AcademicYear = c.AcademicYear,
-                MajorName = c.Major?.MajorName,
-                CurrentSize = c.GetCurrentSize(),
-                MaxCapacity = c.MaxCapacity,
-                IsFull = c.IsFull()
-            }).ToList();
-
-            return classDtos;
+            return await _unitOfWork.Repository<Class>()
+                .GetQueryable()
+                .Select(c => new ClassListDto
+                {
+                    ClassID = c.ClassID,
+                    ClassName = c.ClassName,
+                    AcademicYear = c.AcademicYear,
+                    MajorName = c.Major != null ? c.Major.MajorName : null,
+                    CurrentSize = c.Students.Count,
+                    MaxCapacity = c.MaxCapacity,
+                    IsFull = c.Students.Count >= c.MaxCapacity
+                }).ToListAsync();
         }
 
         public async Task<ClassDto> CreateAsync(CreateClassDto createDto)

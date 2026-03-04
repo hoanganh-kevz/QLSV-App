@@ -2,6 +2,7 @@ using System.Text.Json;
 using AutoMapper;
 using StudentManagement.Core.DTOs.Subject;
 using StudentManagement.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 using StudentManagement.Core.Interfaces.Repositories;
 using StudentManagement.Core.Interfaces.Services;
 
@@ -42,33 +43,33 @@ namespace StudentManagement.Services.Services
 
         public async Task<List<SubjectListDto>> GetAllAsync()
         {
-            IEnumerable<Subject> subjects = await _unitOfWork.Repository<Subject>().GetAllAsync();
-
-            return subjects.Select(s => new SubjectListDto
-            {
-                SubjectID = s.SubjectID,
-                SubjectCode = s.SubjectCode,
-                SubjectName = s.SubjectName,
-                Credits = s.Credits,
-                SubjectType = s.SubjectType,
-                DepartmentName = s.Department?.DepartmentName
-            }).ToList();
+            return await _unitOfWork.Repository<Subject>()
+                .GetQueryable()
+                .Select(s => new SubjectListDto
+                {
+                    SubjectID = s.SubjectID,
+                    SubjectCode = s.SubjectCode,
+                    SubjectName = s.SubjectName,
+                    Credits = s.Credits,
+                    SubjectType = s.SubjectType,
+                    DepartmentName = s.Department != null ? s.Department.DepartmentName : null
+                }).ToListAsync();
         }
 
         public async Task<List<SubjectListDto>> GetByDepartmentAsync(string departmentId)
         {
-            IEnumerable<Subject> subjects = await _unitOfWork.Repository<Subject>()
-                .FindAsync(s => s.DepartmentID == departmentId);
-
-            return subjects.Select(s => new SubjectListDto
-            {
-                SubjectID = s.SubjectID,
-                SubjectCode = s.SubjectCode,
-                SubjectName = s.SubjectName,
-                Credits = s.Credits,
-                SubjectType = s.SubjectType,
-                DepartmentName = s.Department?.DepartmentName
-            }).ToList();
+            return await _unitOfWork.Repository<Subject>()
+                .GetQueryable()
+                .Where(s => s.DepartmentID == departmentId)
+                .Select(s => new SubjectListDto
+                {
+                    SubjectID = s.SubjectID,
+                    SubjectCode = s.SubjectCode,
+                    SubjectName = s.SubjectName,
+                    Credits = s.Credits,
+                    SubjectType = s.SubjectType,
+                    DepartmentName = s.Department != null ? s.Department.DepartmentName : null
+                }).ToListAsync();
         }
 
         public async Task<SubjectDto> CreateAsync(CreateSubjectDto createDto)

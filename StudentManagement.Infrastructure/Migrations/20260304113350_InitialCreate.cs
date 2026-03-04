@@ -48,6 +48,25 @@ namespace StudentManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CourseSections",
+                columns: table => new
+                {
+                    SectionID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubjectID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TeacherID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Semester = table.Column<int>(type: "int", nullable: false),
+                    AcademicYear = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Schedule = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    RoomID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MaxStudents = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseSections", x => x.SectionID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
                 {
@@ -172,12 +191,105 @@ namespace StudentManagement.Infrastructure.Migrations
                         name: "FK_Persons_Departments_DepartmentID",
                         column: x => x.DepartmentID,
                         principalTable: "Departments",
-                        principalColumn: "DepartmentID");
+                        principalColumn: "DepartmentID",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Persons_Majors_MajorID",
                         column: x => x.MajorID,
                         principalTable: "Majors",
                         principalColumn: "MajorID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Enrollments",
+                columns: table => new
+                {
+                    EnrollmentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StudentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SectionID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EnrollmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AttendanceRate = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Enrollments", x => x.EnrollmentID);
+                    table.ForeignKey(
+                        name: "FK_Enrollments_CourseSections_SectionID",
+                        column: x => x.SectionID,
+                        principalTable: "CourseSections",
+                        principalColumn: "SectionID");
+                    table.ForeignKey(
+                        name: "FK_Enrollments_Persons_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Persons",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Grades",
+                columns: table => new
+                {
+                    GradeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EnrollmentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    StudentID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    SubjectID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Semester = table.Column<int>(type: "int", nullable: false),
+                    AcademicYear = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    AttendanceScore = table.Column<decimal>(type: "decimal(4,2)", nullable: true),
+                    MidtermScore = table.Column<decimal>(type: "decimal(4,2)", nullable: true),
+                    FinalScore = table.Column<decimal>(type: "decimal(4,2)", nullable: true),
+                    TotalScore = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
+                    LetterGrade = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: false),
+                    GradePoint = table.Column<decimal>(type: "decimal(3,2)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Grades", x => x.GradeID);
+                    table.ForeignKey(
+                        name: "FK_Grades_Enrollments_EnrollmentID",
+                        column: x => x.EnrollmentID,
+                        principalTable: "Enrollments",
+                        principalColumn: "EnrollmentID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Grades_Persons_StudentID",
+                        column: x => x.StudentID,
+                        principalTable: "Persons",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Grades_Subjects_SubjectID",
+                        column: x => x.SubjectID,
+                        principalTable: "Subjects",
+                        principalColumn: "SubjectID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GradeHistories",
+                columns: table => new
+                {
+                    HistoryID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    GradeID = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Component = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    OldValue = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
+                    NewValue = table.Column<decimal>(type: "decimal(4,2)", nullable: false),
+                    ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Reason = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GradeHistories", x => x.HistoryID);
+                    table.ForeignKey(
+                        name: "FK_GradeHistories_Grades_GradeID",
+                        column: x => x.GradeID,
+                        principalTable: "Grades",
+                        principalColumn: "GradeID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -203,6 +315,16 @@ namespace StudentManagement.Infrastructure.Migrations
                 column: "MajorID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CourseSections_SubjectID",
+                table: "CourseSections",
+                column: "SubjectID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseSections_TeacherID",
+                table: "CourseSections",
+                column: "TeacherID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Departments_DeanID",
                 table: "Departments",
                 column: "DeanID");
@@ -212,6 +334,37 @@ namespace StudentManagement.Infrastructure.Migrations
                 table: "Departments",
                 column: "DepartmentName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_SectionID",
+                table: "Enrollments",
+                column: "SectionID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enrollments_StudentID",
+                table: "Enrollments",
+                column: "StudentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GradeHistories_GradeID",
+                table: "GradeHistories",
+                column: "GradeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_EnrollmentID",
+                table: "Grades",
+                column: "EnrollmentID",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_StudentID",
+                table: "Grades",
+                column: "StudentID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Grades_SubjectID",
+                table: "Grades",
+                column: "SubjectID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Majors_DepartmentID",
@@ -301,6 +454,20 @@ namespace StudentManagement.Infrastructure.Migrations
                 onDelete: ReferentialAction.SetNull);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_CourseSections_Persons_TeacherID",
+                table: "CourseSections",
+                column: "TeacherID",
+                principalTable: "Persons",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_CourseSections_Subjects_SubjectID",
+                table: "CourseSections",
+                column: "SubjectID",
+                principalTable: "Subjects",
+                principalColumn: "SubjectID");
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Departments_Persons_DeanID",
                 table: "Departments",
                 column: "DeanID",
@@ -327,6 +494,18 @@ namespace StudentManagement.Infrastructure.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Departments_Persons_DeanID",
                 table: "Departments");
+
+            migrationBuilder.DropTable(
+                name: "GradeHistories");
+
+            migrationBuilder.DropTable(
+                name: "Grades");
+
+            migrationBuilder.DropTable(
+                name: "Enrollments");
+
+            migrationBuilder.DropTable(
+                name: "CourseSections");
 
             migrationBuilder.DropTable(
                 name: "Subjects");
