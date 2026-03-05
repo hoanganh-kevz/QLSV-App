@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StudentManagement.Core.DTOs.Class;
 using StudentManagement.Core.DTOs.Student;
 using StudentManagement.Core.Interfaces.Services;
 using System.Security.Claims;
@@ -13,15 +14,18 @@ namespace StudentManagement.API.Controllers
     {
         private readonly IExportService _exportService;
         private readonly IStudentService _studentService;
+        private readonly IClassService _classService;
         private readonly ILogger<ExportController> _logger;
 
         public ExportController(
             IExportService exportService,
             IStudentService studentService,
+            IClassService classService,
             ILogger<ExportController> logger)
         {
             _exportService = exportService;
             _studentService = studentService;
+            _classService = classService;
             _logger = logger;
         }
 
@@ -169,6 +173,41 @@ namespace StudentManagement.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error exporting roster for class {classId}");
+                return StatusCode(500, new { message = "Export failed" });
+            }
+        }
+
+        /// <summary>
+        /// Export classes to Excel
+        /// </summary>
+        [HttpGet("classes/excel")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ExportClassesExcel()
+        {
+            try
+            {
+                List<ClassDto> classes = (await _classService.GetAllAsync())
+                    .Select((ClassListDto c) => new ClassDto
+                    {
+                        ClassID = c.ClassID,
+                        ClassName = c.ClassName,
+                        AcademicYear = c.AcademicYear,
+                        MajorName = c.MajorName,
+                        CurrentSize = c.CurrentSize,
+                        MaxCapacity = c.MaxCapacity,
+                        AverageGPA = 0
+                    }).ToList();
+
+                byte[] excelData = await _exportService.ExportClassesToExcelAsync(classes);
+                string fileName = $"Classes_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+                return File(excelData,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    fileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting classes to Excel");
                 return StatusCode(500, new { message = "Export failed" });
             }
         }

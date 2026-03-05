@@ -175,5 +175,66 @@ namespace StudentManagement.API.Controllers
                 return NotFound();
             return Ok(grade);
         }
+
+        /// <summary>
+        /// Delete a grade
+        /// </summary>
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            try
+            {
+                bool success = await _gradeService.DeleteAsync(id);
+                if (!success)
+                    return NotFound(new { message = "Grade not found" });
+
+                return Ok(new { message = "Grade deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting grade {GradeId}", id);
+                return StatusCode(500, new { message = "Internal server error" });
+            }
+        }
+
+        /// <summary>
+        /// Batch create/update grades for a section
+        /// </summary>
+        [HttpPost("batch")]
+        [Authorize(Roles = "Admin,Teacher")]
+        public async Task<ActionResult<List<GradeDto>>> BatchCreate([FromBody] BatchGradeDto batchDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                List<GradeDto> results = new List<GradeDto>();
+
+                foreach (CreateGradeDto gradeDto in batchDto.Grades)
+                {
+                    GradeDto grade = await _gradeService.CreateAsync(gradeDto, userId);
+                    results.Add(grade);
+                }
+
+                return Ok(new { message = $"Successfully created {results.Count} grades", grades = results });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in batch grade creation");
+                return StatusCode(500, new { message = "Batch grade creation failed" });
+            }
+        }
+    }
+
+    public class BatchGradeDto
+    {
+        public List<CreateGradeDto> Grades { get; set; } = new List<CreateGradeDto>();
     }
 }
