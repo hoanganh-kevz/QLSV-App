@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddControllers();
-
+builder.Services.AddScoped<DashboardService>();
 // EF Core + SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
