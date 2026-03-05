@@ -22,24 +22,24 @@ namespace StudentManagement.Services.Services
 
         public async Task<SearchResultDto<StudentDto>> SearchStudentsAsync(AdvancedSearchDto searchDto)
         {
-            var stopwatch = Stopwatch.StartNew();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             
             // Start with base query
-            var query = _context.Students
-                .Include(s => s.Class)
+            IQueryable<Student> query = _context.Students
+                .Include((Student s) => s.Class)
                 .AsQueryable();
 
             // Apply keyword search (multiple words)
             if (!string.IsNullOrWhiteSpace(searchDto.Keywords))
             {
-                var keywords = searchDto.Keywords
+                List<string> keywords = searchDto.Keywords
                     .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(k => k.ToLower())
+                    .Select((string k) => k.ToLower())
                     .ToList();
 
-                foreach (var keyword in keywords)
+                foreach (string keyword in keywords)
                 {
-                    query = query.Where(s =>
+                    query = query.Where((Student s) =>
                         s.FullName.ToLower().Contains(keyword) ||
                         s.Email.ToLower().Contains(keyword) ||
                         s.StudentCode.ToLower().Contains(keyword) ||
@@ -51,51 +51,51 @@ namespace StudentManagement.Services.Services
             // Class filter
             if (searchDto.ClassIds != null && searchDto.ClassIds.Any())
             {
-                query = query.Where(s => searchDto.ClassIds.Contains(s.ClassID));
+                query = query.Where((Student s) => searchDto.ClassIds.Contains(s.ClassID));
             }
 
             // Major filter
             if (searchDto.MajorIds != null && searchDto.MajorIds.Any())
             {
-                query = query.Where(s => searchDto.MajorIds.Contains(s.MajorID));
+                query = query.Where((Student s) => searchDto.MajorIds.Contains(s.MajorID));
             }
 
             // Status filter
             if (searchDto.Statuses != null && searchDto.Statuses.Any())
             {
-                var statusEnums = searchDto.Statuses
-                    .Select(s => Enum.Parse<StudentStatus>(s))
+                List<StudentStatus> statusEnums = searchDto.Statuses
+                    .Select((string s) => Enum.Parse<StudentStatus>(s))
                     .ToList();
-                query = query.Where(s => statusEnums.Contains(s.Status));
+                query = query.Where((Student s) => statusEnums.Contains(s.Status));
             }
 
             // Enrollment year range
             if (searchDto.EnrollmentYearFrom.HasValue)
             {
-                query = query.Where(s => s.EnrollmentYear >= searchDto.EnrollmentYearFrom.Value);
+                query = query.Where((Student s) => s.EnrollmentYear >= searchDto.EnrollmentYearFrom.Value);
             }
 
             if (searchDto.EnrollmentYearTo.HasValue)
             {
-                query = query.Where(s => s.EnrollmentYear <= searchDto.EnrollmentYearTo.Value);
+                query = query.Where((Student s) => s.EnrollmentYear <= searchDto.EnrollmentYearTo.Value);
             }
 
             // GPA range
             if (searchDto.MinGPA.HasValue)
             {
-                query = query.Where(s => s.GPA >= searchDto.MinGPA.Value);
+                query = query.Where((Student s) => s.GPA >= searchDto.MinGPA.Value);
             }
 
             if (searchDto.MaxGPA.HasValue)
             {
-                query = query.Where(s => s.GPA <= searchDto.MaxGPA.Value);
+                query = query.Where((Student s) => s.GPA <= searchDto.MaxGPA.Value);
             }
 
             // Get total count before pagination
-            var totalCount = await query.CountAsync();
+            int totalCount = await query.CountAsync();
 
             // Calculate facets (for UI filters)
-            var facets = await CalculateFacetsAsync(query);
+            Dictionary<string, int> facets = await CalculateFacetsAsync(query);
 
             // Apply sorting
             query = ApplySorting(query, searchDto.SortBy, searchDto.SortOrder);
@@ -106,10 +106,10 @@ namespace StudentManagement.Services.Services
                 .Take(searchDto.PageSize);
 
             // Execute query
-            var students = await query.ToListAsync();
+            List<Student> students = await query.ToListAsync();
             
             // Map to DTOs
-            var studentDtos = _mapper.Map<List<StudentDto>>(students);
+            List<StudentDto> studentDtos = _mapper.Map<List<StudentDto>>(students);
 
             stopwatch.Stop();
 
@@ -126,39 +126,39 @@ namespace StudentManagement.Services.Services
 
         private IQueryable<Student> ApplySorting(IQueryable<Student> query, string sortBy, string sortOrder)
         {
-            var ascending = sortOrder.ToLower() == "asc";
+            bool ascending = sortOrder.ToLower() == "asc";
 
             return sortBy.ToLower() switch
             {
                 "fullname" => ascending 
-                    ? query.OrderBy(s => s.FullName) 
-                    : query.OrderByDescending(s => s.FullName),
+                    ? query.OrderBy((Student s) => s.FullName) 
+                    : query.OrderByDescending((Student s) => s.FullName),
                     
                 "gpa" => ascending 
-                    ? query.OrderBy(s => s.GPA) 
-                    : query.OrderByDescending(s => s.GPA),
+                    ? query.OrderBy((Student s) => s.GPA) 
+                    : query.OrderByDescending((Student s) => s.GPA),
                     
                 "enrollmentyear" => ascending 
-                    ? query.OrderBy(s => s.EnrollmentYear) 
-                    : query.OrderByDescending(s => s.EnrollmentYear),
+                    ? query.OrderBy((Student s) => s.EnrollmentYear) 
+                    : query.OrderByDescending((Student s) => s.EnrollmentYear),
                     
                 "class" => ascending 
-                    ? query.OrderBy(s => s.Class.ClassName) 
-                    : query.OrderByDescending(s => s.Class.ClassName),
+                    ? query.OrderBy((Student s) => s.Class.ClassName) 
+                    : query.OrderByDescending((Student s) => s.Class.ClassName),
                     
                 _ => ascending 
-                    ? query.OrderBy(s => s.StudentCode) 
-                    : query.OrderByDescending(s => s.StudentCode)
+                    ? query.OrderBy((Student s) => s.StudentCode) 
+                    : query.OrderByDescending((Student s) => s.StudentCode)
             };
         }
 
         private async Task<Dictionary<string, int>> CalculateFacetsAsync(IQueryable<Student> query)
         {
-            var facets = new Dictionary<string, int>();
+            Dictionary<string, int> facets = new Dictionary<string, int>();
 
-            // Count by status
+            // Count by status — var required: uses anonymous type
             var statusCounts = await query
-                .GroupBy(s => s.Status)
+                .GroupBy((Student s) => s.Status)
                 .Select(g => new { Status = g.Key.ToString(), Count = g.Count() })
                 .ToListAsync();
 
@@ -167,10 +167,10 @@ namespace StudentManagement.Services.Services
                 facets[$"status_{item.Status}"] = item.Count;
             }
 
-            // Count by class
+            // Count by class — var required: uses anonymous type
             var classCounts = await query
-                .Where(s => s.ClassID != null)
-                .GroupBy(s => s.ClassID)
+                .Where((Student s) => s.ClassID != null)
+                .GroupBy((Student s) => s.ClassID)
                 .Select(g => new { ClassID = g.Key, Count = g.Count() })
                 .Take(10)
                 .ToListAsync();
@@ -181,10 +181,10 @@ namespace StudentManagement.Services.Services
             }
 
             // Count by GPA range
-            facets["gpa_excellent"] = await query.CountAsync(s => s.GPA >= 3.6m);
-            facets["gpa_good"] = await query.CountAsync(s => s.GPA >= 3.2m && s.GPA < 3.6m);
-            facets["gpa_average"] = await query.CountAsync(s => s.GPA >= 2.5m && s.GPA < 3.2m);
-            facets["gpa_below"] = await query.CountAsync(s => s.GPA < 2.5m);
+            facets["gpa_excellent"] = await query.CountAsync((Student s) => s.GPA >= 3.6m);
+            facets["gpa_good"] = await query.CountAsync((Student s) => s.GPA >= 3.2m && s.GPA < 3.6m);
+            facets["gpa_average"] = await query.CountAsync((Student s) => s.GPA >= 2.5m && s.GPA < 3.2m);
+            facets["gpa_below"] = await query.CountAsync((Student s) => s.GPA < 2.5m);
 
             return facets;
         }
@@ -192,23 +192,23 @@ namespace StudentManagement.Services.Services
         public async Task<SearchResultDto<StudentDto>> SearchByTextAsync(string searchText, int pageSize = 10)
         {
             // Simplified quick search
-            var query = _context.Students
-                .Include(s => s.Class)
+            IQueryable<Student> query = _context.Students
+                .Include((Student s) => s.Class)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchText))
             {
-                var lowerText = searchText.ToLower();
-                query = query.Where(s =>
+                string lowerText = searchText.ToLower();
+                query = query.Where((Student s) =>
                     s.FullName.ToLower().Contains(lowerText) ||
                     s.Email.ToLower().Contains(lowerText) ||
                     s.StudentCode.ToLower().Contains(lowerText)
                 );
             }
 
-            var totalCount = await query.CountAsync();
-            var students = await query.Take(pageSize).ToListAsync();
-            var studentDtos = _mapper.Map<List<StudentDto>>(students);
+            int totalCount = await query.CountAsync();
+            List<Student> students = await query.Take(pageSize).ToListAsync();
+            List<StudentDto> studentDtos = _mapper.Map<List<StudentDto>>(students);
 
             return new SearchResultDto<StudentDto>
             {

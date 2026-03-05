@@ -43,7 +43,7 @@ namespace StudentManagement.Services.Services
 
         public async Task<PagedStudentResult> GetAllAsync(StudentSearchDto searchDto)
         {
-            var query = _unitOfWork.Repository<Student>().GetQueryable();
+            IQueryable<Student> query = _unitOfWork.Repository<Student>().GetQueryable();
 
             // Apply filters
             if (!string.IsNullOrEmpty(searchDto.Keyword))

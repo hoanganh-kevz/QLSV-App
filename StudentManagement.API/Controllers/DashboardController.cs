@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using StudentManagement.Core.DTOs.Dashboard;
 using StudentManagement.Core.Interfaces.Services;
 
 namespace StudentManagement.API.Controllers
@@ -19,7 +20,7 @@ namespace StudentManagement.API.Controllers
         [HttpGet("stats")]
         public async Task<IActionResult> GetStats()
         {
-            var stats = await _dashboardService.GetAdvancedStatsAsync();
+            DashboardStatsDto stats = await _dashboardService.GetAdvancedStatsAsync();
             return Ok(stats);
         }
     }

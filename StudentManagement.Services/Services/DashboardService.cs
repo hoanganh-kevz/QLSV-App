@@ -18,60 +18,56 @@ namespace StudentManagement.Services.Services
 
         public async Task<DashboardStatsDto> GetAdvancedStatsAsync()
         {
-            var stats = new DashboardStatsDto
+            DashboardStatsDto stats = new DashboardStatsDto
             {
-                TotalStudents = await _unitOfWork.Repository<Student>().CountAsync(s => s.Status == StudentStatus.Active),
+                TotalStudents = await _unitOfWork.Repository<Student>().CountAsync((Student s) => s.Status == StudentStatus.Active),
                 TotalTeachers = await _unitOfWork.Repository<Teacher>().CountAsync(),
                 TotalClasses = await _unitOfWork.Repository<Class>().CountAsync(),
                 TotalSubjects = await _unitOfWork.Repository<Subject>().CountAsync()
             };
 
             // Calculate System Average GPA
-            var validGPAs = await _unitOfWork.Repository<Student>()
+            List<decimal> validGPAs = await _unitOfWork.Repository<Student>()
                 .GetQueryable()
-                .Where(s => s.Status == StudentStatus.Active && s.GPA > 0)
-                .Select(s => s.GPA)
+                .Where((Student s) => s.Status == StudentStatus.Active && s.GPA > 0)
+                .Select((Student s) => s.GPA)
                 .ToListAsync();
 
             stats.AverageSystemGPA = validGPAs.Any() ? Math.Round(validGPAs.Average(), 2) : 0;
 
-            // Grade Distribution (From Grades table)
+            // Grade Distribution — var required: uses anonymous type in Select
             var gradeDistribution = await _unitOfWork.Repository<Grade>()
                 .GetQueryable()
-                .Where(g => g.Status != "Incomplete" && g.LetterGrade != null)
-                .GroupBy(g => g.LetterGrade)
+                .Where((Grade g) => g.Status != "Incomplete" && g.LetterGrade != null)
+                .GroupBy((Grade g) => g.LetterGrade)
                 .Select(g => new { Grade = g.Key, Count = g.Count() })
                 .ToDictionaryAsync(g => g.Grade!, g => g.Count);
                 
             stats.GradeDistribution = gradeDistribution;
 
-            // Enrollment Trends
+            // Enrollment Trends — var required: uses anonymous type in Select
             var enrollmentTrends = await _unitOfWork.Repository<Student>()
                 .GetQueryable()
-                .Where(s => s.EnrollmentYear > 0)
-                .GroupBy(s => s.EnrollmentYear)
+                .Where((Student s) => s.EnrollmentYear > 0)
+                .GroupBy((Student s) => s.EnrollmentYear)
                 .Select(g => new { Year = g.Key.ToString(), Count = g.Count() })
                 .ToDictionaryAsync(g => g.Year, g => g.Count);
 
             stats.EnrollmentTrends = enrollmentTrends;
 
-            // Top Performing Classes
-            var classes = await _unitOfWork.Repository<Class>()
+            // Top Performing Classes — SQL Projection (no in-memory loading)
+            List<TopClassDto> topClasses = await _unitOfWork.Repository<Class>()
                 .GetQueryable()
-                .Include(c => c.Students)
-                .ToListAsync();
-
-            var topClasses = classes
-                .Where(c => c.Students != null && c.Students.Any(s => s.GPA > 0))
-                .Select(c => new TopClassDto
+                .Where((Class c) => c.Students != null && c.Students.Any((Student s) => s.GPA > 0))
+                .Select((Class c) => new TopClassDto
                 {
                     ClassID = c.ClassID,
                     ClassName = c.ClassName,
-                    AverageGPA = Math.Round(c.Students.Where(s => s.GPA > 0).Average(s => s.GPA), 2)
+                    AverageGPA = Math.Round(c.Students.Where((Student s) => s.GPA > 0).Average((Student s) => s.GPA), 2)
                 })
-                .OrderByDescending(c => c.AverageGPA)
+                .OrderByDescending((TopClassDto c) => c.AverageGPA)
                 .Take(5)
-                .ToList();
+                .ToListAsync();
 
             stats.TopPerformingClasses = topClasses;
 

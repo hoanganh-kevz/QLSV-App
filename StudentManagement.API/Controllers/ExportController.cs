@@ -34,10 +34,10 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var result = await _studentService.GetAllAsync(searchDto);
-                var excelData = await _exportService.ExportStudentsToExcelAsync(result.Students.ToList());
+                PagedStudentResult result = await _studentService.GetAllAsync(searchDto);
+                byte[] excelData = await _exportService.ExportStudentsToExcelAsync(result.Students.ToList());
 
-                var fileName = $"Students_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                string fileName = $"Students_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
                 return File(excelData, 
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
                     fileName);
@@ -58,8 +58,8 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var excelData = await _exportService.ExportGradesToExcelAsync(sectionId);
-                var fileName = $"Grades_{sectionId}_{DateTime.Now:yyyyMMdd}.xlsx";
+                byte[] excelData = await _exportService.ExportGradesToExcelAsync(sectionId);
+                string fileName = $"Grades_{sectionId}_{DateTime.Now:yyyyMMdd}.xlsx";
                 
                 return File(excelData,
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -81,8 +81,8 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var template = await _exportService.GenerateGradeEntryTemplateAsync(sectionId);
-                var fileName = $"GradeTemplate_{sectionId}.xlsx";
+                byte[] template = await _exportService.GenerateGradeEntryTemplateAsync(sectionId);
+                string fileName = $"GradeTemplate_{sectionId}.xlsx";
                 
                 return File(template,
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -107,11 +107,11 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                using var memoryStream = new MemoryStream();
+                using MemoryStream memoryStream = new MemoryStream();
                 await file.CopyToAsync(memoryStream);
-                var fileData = memoryStream.ToArray();
+                byte[] fileData = memoryStream.ToArray();
 
-                var success = await _exportService.ImportGradesFromExcelAsync(fileData, sectionId);
+                bool success = await _exportService.ImportGradesFromExcelAsync(fileData, sectionId);
                 
                 if (success)
                     return Ok(new { message = "Grades imported successfully" });
@@ -134,14 +134,14 @@ namespace StudentManagement.API.Controllers
             try
             {
                 // Students can only export their own transcript
-                var role = User.FindFirst(ClaimTypes.Role)?.Value;
-                var currentUserId = User.FindFirst("PersonId")?.Value;
+                string? role = User.FindFirst(ClaimTypes.Role)?.Value;
+                string? currentUserId = User.FindFirst("PersonId")?.Value;
 
                 if (role == "Student" && currentUserId != studentId)
                     return Forbid();
 
-                var pdfData = await _exportService.ExportTranscriptToPdfAsync(studentId);
-                var fileName = $"Transcript_{studentId}_{DateTime.Now:yyyyMMdd}.pdf";
+                byte[] pdfData = await _exportService.ExportTranscriptToPdfAsync(studentId);
+                string fileName = $"Transcript_{studentId}_{DateTime.Now:yyyyMMdd}.pdf";
 
                 return File(pdfData, "application/pdf", fileName);
             }
@@ -161,8 +161,8 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var pdfData = await _exportService.ExportClassRosterToPdfAsync(classId);
-                var fileName = $"ClassRoster_{classId}_{DateTime.Now:yyyyMMdd}.pdf";
+                byte[] pdfData = await _exportService.ExportClassRosterToPdfAsync(classId);
+                string fileName = $"ClassRoster_{classId}_{DateTime.Now:yyyyMMdd}.pdf";
 
                 return File(pdfData, "application/pdf", fileName);
             }

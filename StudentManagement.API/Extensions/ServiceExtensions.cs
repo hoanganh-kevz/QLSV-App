@@ -21,6 +21,7 @@ namespace StudentManagement.API.Extensions
                     configuration.GetConnectionString("DefaultConnection"),
                     b => b.MigrationsAssembly("StudentManagement.Infrastructure")
                 )
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
             );
         }
 
@@ -33,7 +34,6 @@ namespace StudentManagement.API.Extensions
         public static void ConfigureServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IClassService, ClassService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<IGradeService, GradeService>();
@@ -41,6 +41,10 @@ namespace StudentManagement.API.Extensions
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<IAdvancedSearchService, AdvancedSearchService>();
             services.AddScoped<IExportService, ExportService>();
+            services.AddScoped<StudentService>();
+            services.AddScoped<IStudentService, CachedStudentService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IUserManagementService, UserManagementService>();
             services.AddScoped<JwtHelper>();
             services.AddAutoMapper(typeof(MappingProfile).Assembly);
         }

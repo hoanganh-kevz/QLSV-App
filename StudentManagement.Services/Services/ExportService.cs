@@ -30,8 +30,8 @@ namespace StudentManagement.Services.Services
 
         public async Task<byte[]> ExportStudentsToExcelAsync(List<StudentListDto> students)
         {
-            using var package = new ExcelPackage();
-            var worksheet = package.Workbook.Worksheets.Add("Danh sách sinh viên");
+            using ExcelPackage package = new ExcelPackage();
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Danh sách sinh viên");
 
             // Title
             worksheet.Cells[1, 1, 1, 8].Merge = true;
@@ -46,8 +46,8 @@ namespace StudentManagement.Services.Services
             worksheet.Cells[3, 1].Value = $"Tổng số: {students.Count} sinh viên";
 
             // Headers
-            var headerRow = 5;
-            var headers = new[]
+            int headerRow = 5;
+            string[] headers = new[]
             {
                 "STT", "Mã SV", "Họ và tên", "Email",
                 "Lớp", "GPA", "Trạng thái"
@@ -55,7 +55,7 @@ namespace StudentManagement.Services.Services
 
             for (int i = 0; i < headers.Length; i++)
             {
-                var cell = worksheet.Cells[headerRow, i + 1];
+                ExcelRange cell = worksheet.Cells[headerRow, i + 1];
                 cell.Value = headers[i];
                 cell.Style.Font.Bold = true;
                 cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -68,7 +68,7 @@ namespace StudentManagement.Services.Services
             int row = headerRow + 1;
             int stt = 1;
             
-            foreach (var student in students)
+            foreach (StudentListDto student in students)
             {
                 worksheet.Cells[row, 1].Value = stt++;
                 worksheet.Cells[row, 2].Value = student.StudentCode;
@@ -80,14 +80,14 @@ namespace StudentManagement.Services.Services
                 worksheet.Cells[row, 7].Value = student.Status;
 
                 // Conditional formatting for GPA
-                var gpaCell = worksheet.Cells[row, 6];
+                ExcelRange gpaCell = worksheet.Cells[row, 6];
                 if (student.GPA >= 3.6m)
                     gpaCell.Style.Font.Color.SetColor(DrawingColor.Green);
                 else if (student.GPA < 2.0m)
                     gpaCell.Style.Font.Color.SetColor(DrawingColor.Red);
 
                 // Status color
-                var statusCell = worksheet.Cells[row, 7];
+                ExcelRange statusCell = worksheet.Cells[row, 7];
                 statusCell.Style.Font.Color.SetColor(student.Status switch
                 {
                     "Active" => DrawingColor.Green,
@@ -111,16 +111,16 @@ namespace StudentManagement.Services.Services
             worksheet.Cells[row, 1].Style.Font.Bold = true;
             row++;
             
-            var activeCount = students.Count(s => s.Status == "Active");
-            var avgGPA = students.Any() ? students.Average(s => (double)s.GPA) : 0;
+            int activeCount = students.Count((StudentListDto s) => s.Status == "Active");
+            double avgGPA = students.Any() ? students.Average((StudentListDto s) => (double)s.GPA) : 0;
             
             worksheet.Cells[row, 1].Value = $"Đang học: {activeCount}";
             row++;
             worksheet.Cells[row, 1].Value = $"GPA trung bình: {avgGPA:F2}";
             row++;
-            worksheet.Cells[row, 1].Value = $"GPA cao nhất: {students.Max(s => s.GPA):F2}";
+            worksheet.Cells[row, 1].Value = $"GPA cao nhất: {students.Max((StudentListDto s) => s.GPA):F2}";
             row++;
-            worksheet.Cells[row, 1].Value = $"GPA thấp nhất: {students.Min(s => s.GPA):F2}";
+            worksheet.Cells[row, 1].Value = $"GPA thấp nhất: {students.Min((StudentListDto s) => s.GPA):F2}";
 
             // Auto-fit columns
             worksheet.Cells.AutoFitColumns(0);
@@ -135,10 +135,10 @@ namespace StudentManagement.Services.Services
             return await package.GetAsByteArrayAsync();
         }
 
-                public async Task<byte[]> ExportClassesToExcelAsync(List<ClassDto> classes)
+        public async Task<byte[]> ExportClassesToExcelAsync(List<ClassDto> classes)
         {
-            using var package = new ExcelPackage();
-            var worksheet = package.Workbook.Worksheets.Add("Danh sách lớp");
+            using ExcelPackage package = new ExcelPackage();
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Danh sách lớp");
 
             worksheet.Cells[1, 1, 1, 6].Merge = true;
             worksheet.Cells[1, 1].Value = "DANH SÁCH LỚP";
@@ -146,11 +146,11 @@ namespace StudentManagement.Services.Services
             worksheet.Cells[1, 1].Style.Font.Bold = true;
             worksheet.Cells[1, 1].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            var headerRow = 3;
-            var headers = new[] { "STT", "Tên Lớp", "Niên Khóa", "Ngành", "Sĩ số", "GPA TB" };
+            int headerRow = 3;
+            string[] headers = new[] { "STT", "Tên Lớp", "Niên Khóa", "Ngành", "Sĩ số", "GPA TB" };
             for (int i = 0; i < headers.Length; i++)
             {
-                var cell = worksheet.Cells[headerRow, i + 1];
+                ExcelRange cell = worksheet.Cells[headerRow, i + 1];
                 cell.Value = headers[i];
                 cell.Style.Font.Bold = true;
                 cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -160,7 +160,7 @@ namespace StudentManagement.Services.Services
 
             int row = headerRow + 1;
             int stt = 1;
-            foreach (var cls in classes)
+            foreach (ClassDto cls in classes)
             {
                 worksheet.Cells[row, 1].Value = stt++;
                 worksheet.Cells[row, 2].Value = cls.ClassName;
@@ -178,13 +178,13 @@ namespace StudentManagement.Services.Services
 
         public async Task<byte[]> ExportGradesToExcelAsync(string sectionId)
         {
-            var grades = await _gradeService.GetBySectionAsync(sectionId);
+            List<GradeDto> grades = await _gradeService.GetBySectionAsync(sectionId);
             
-            using var package = new ExcelPackage();
-            var worksheet = package.Workbook.Worksheets.Add("Bảng điểm");
+            using ExcelPackage package = new ExcelPackage();
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Bảng điểm");
 
             // Section info (get from first grade)
-            var firstGrade = grades.FirstOrDefault();
+            GradeDto? firstGrade = grades.FirstOrDefault();
             if (firstGrade != null)
             {
                 worksheet.Cells[1, 1].Value = "BẢNG ĐIỂM LỚP HỌC PHẦN";
@@ -196,8 +196,8 @@ namespace StudentManagement.Services.Services
             }
 
             // Headers
-            var headerRow = 5;
-            var headers = new[]
+            int headerRow = 5;
+            string[] headers = new[]
             {
                 "STT", "Mã SV", "Họ tên", "Chuyên cần (10%)", 
                 "Giữa kỳ (30%)", "Cuối kỳ (60%)", "Tổng kết", 
@@ -206,7 +206,7 @@ namespace StudentManagement.Services.Services
 
             for (int i = 0; i < headers.Length; i++)
             {
-                var cell = worksheet.Cells[headerRow, i + 1];
+                ExcelRange cell = worksheet.Cells[headerRow, i + 1];
                 cell.Value = headers[i];
                 cell.Style.Font.Bold = true;
                 cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -219,7 +219,7 @@ namespace StudentManagement.Services.Services
             int row = headerRow + 1;
             int stt = 1;
             
-            foreach (var grade in grades.OrderBy(g => g.StudentCode))
+            foreach (GradeDto grade in grades.OrderBy((GradeDto g) => g.StudentCode))
             {
                 worksheet.Cells[row, 1].Value = stt++;
                 worksheet.Cells[row, 2].Value = grade.StudentCode;
@@ -239,7 +239,7 @@ namespace StudentManagement.Services.Services
                 }
 
                 // Color coding for results
-                var resultCell = worksheet.Cells[row, 10];
+                ExcelRange resultCell = worksheet.Cells[row, 10];
                 resultCell.Style.Font.Color.SetColor(grade.Status switch
                 {
                     "Pass" => DrawingColor.Green,
@@ -262,7 +262,8 @@ namespace StudentManagement.Services.Services
             worksheet.Cells[row, 1].Style.Font.Bold = true;
             row++;
 
-            var gradeDistribution = grades.GroupBy(g => g.LetterGrade)
+            // var required: GroupBy uses anonymous type
+            var gradeDistribution = grades.GroupBy((GradeDto g) => g.LetterGrade)
                 .OrderBy(g => g.Key)
                 .ToList();
 
@@ -275,7 +276,7 @@ namespace StudentManagement.Services.Services
             }
 
             row++;
-            var passCount = grades.Count(g => g.Status == "Pass");
+            int passCount = grades.Count((GradeDto g) => g.Status == "Pass");
             worksheet.Cells[row, 1].Value = "Tỷ lệ đậu:";
             worksheet.Cells[row, 2].Value = $"{(passCount * 100.0 / grades.Count):F1}%";
             worksheet.Cells[row, 2].Style.Font.Bold = true;
@@ -285,12 +286,12 @@ namespace StudentManagement.Services.Services
             return await package.GetAsByteArrayAsync();
         }
 
-                public async Task<byte[]> GenerateGradeEntryTemplateAsync(string sectionId)
+        public async Task<byte[]> GenerateGradeEntryTemplateAsync(string sectionId)
         {
-            var grades = await _gradeService.GetBySectionAsync(sectionId);
+            List<GradeDto> grades = await _gradeService.GetBySectionAsync(sectionId);
             
-            using var package = new ExcelPackage();
-            var worksheet = package.Workbook.Worksheets.Add("Nhập điểm");
+            using ExcelPackage package = new ExcelPackage();
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Nhập điểm");
 
             // Instructions
             worksheet.Cells[1, 1].Value = "MẪU NHẬP ĐIỂM - HƯỚNG DẪN";
@@ -303,7 +304,7 @@ namespace StudentManagement.Services.Services
             worksheet.Cells[5, 1].Value = "4. Sau khi nhập xong, upload file này lên hệ thống";
 
             // Headers (row 7)
-            var headerRow = 7;
+            int headerRow = 7;
             worksheet.Cells[headerRow, 1].Value = "Mã SV (Không sửa)";
             worksheet.Cells[headerRow, 2].Value = "Họ tên (Không sửa)";
             worksheet.Cells[headerRow, 3].Value = "Chuyên cần (0-10)";
@@ -314,7 +315,7 @@ namespace StudentManagement.Services.Services
             // Style headers
             for (int col = 1; col <= 6; col++)
             {
-                var cell = worksheet.Cells[headerRow, col];
+                ExcelRange cell = worksheet.Cells[headerRow, col];
                 cell.Style.Font.Bold = true;
                 cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
                 cell.Style.Fill.BackgroundColor.SetColor(DrawingColor.Yellow);
@@ -332,7 +333,7 @@ namespace StudentManagement.Services.Services
 
             // Student data
             int row = headerRow + 1;
-            foreach (var grade in grades.OrderBy(g => g.StudentCode))
+            foreach (GradeDto grade in grades.OrderBy((GradeDto g) => g.StudentCode))
             {
                 worksheet.Cells[row, 1].Value = grade.StudentCode;
                 worksheet.Cells[row, 2].Value = grade.StudentName;
@@ -340,6 +341,7 @@ namespace StudentManagement.Services.Services
                 // Data validation for score columns
                 for (int col = 3; col <= 5; col++)
                 {
+                    // var required: EPPlus internal type
                     var validation = worksheet.DataValidations.AddDecimalValidation(
                         worksheet.Cells[row, col].Address);
                     validation.Formula.Value = 0;
@@ -365,32 +367,33 @@ namespace StudentManagement.Services.Services
 
         public async Task<bool> ImportGradesFromExcelAsync(byte[] fileData, string sectionId)
         {
-            using var stream = new MemoryStream(fileData);
-            using var package = new ExcelPackage(stream);
+            using MemoryStream stream = new MemoryStream(fileData);
+            using ExcelPackage package = new ExcelPackage(stream);
             
-            var worksheet = package.Workbook.Worksheets[0];
-            var startRow = 8; // Data starts at row 8
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+            int startRow = 8; // Data starts at row 8
             
-            var updates = new List<(string studentCode, decimal? attendance, decimal? midterm, decimal? final)>();
+            List<(string studentCode, decimal? attendance, decimal? midterm, decimal? final)> updates = 
+                new List<(string studentCode, decimal? attendance, decimal? midterm, decimal? final)>();
 
             for (int row = startRow; row <= worksheet.Dimension.End.Row; row++)
             {
-                var studentCode = worksheet.Cells[row, 1].Value?.ToString();
+                string? studentCode = worksheet.Cells[row, 1].Value?.ToString();
                 if (string.IsNullOrEmpty(studentCode))
                     break;
 
-                var attendance = worksheet.Cells[row, 3].GetValue<decimal?>();
-                var midterm = worksheet.Cells[row, 4].GetValue<decimal?>();
-                var final = worksheet.Cells[row, 5].GetValue<decimal?>();
+                decimal? attendance = worksheet.Cells[row, 3].GetValue<decimal?>();
+                decimal? midterm = worksheet.Cells[row, 4].GetValue<decimal?>();
+                decimal? finalScore = worksheet.Cells[row, 5].GetValue<decimal?>();
 
-                updates.Add((studentCode, attendance, midterm, final));
+                updates.Add((studentCode, attendance, midterm, finalScore));
             }
 
             // Process updates
-            foreach (var (studentCode, attendance, midterm, final) in updates)
+            foreach ((string studentCode, decimal? attendance, decimal? midterm, decimal? finalScore) in updates)
             {
-                var grades = await _gradeService.GetBySectionAsync(sectionId);
-                var grade = grades.FirstOrDefault(g => g.StudentCode == studentCode);
+                List<GradeDto> grades = await _gradeService.GetBySectionAsync(sectionId);
+                GradeDto? grade = grades.FirstOrDefault((GradeDto g) => g.StudentCode == studentCode);
                 
                 if (grade != null)
                 {
@@ -404,9 +407,9 @@ namespace StudentManagement.Services.Services
                             new UpdateGradeComponentDto { Component = "Midterm", Score = midterm.Value },
                             "System");
                     
-                    if (final.HasValue)
+                    if (finalScore.HasValue)
                         await _gradeService.UpdateComponentAsync(grade.GradeID,
-                            new UpdateGradeComponentDto { Component = "Final", Score = final.Value },
+                            new UpdateGradeComponentDto { Component = "Final", Score = finalScore.Value },
                             "System");
                 }
             }
@@ -416,10 +419,9 @@ namespace StudentManagement.Services.Services
 
         public async Task<byte[]> ExportTranscriptToExcelAsync(string studentId)
         {
-            // Placeholder - can be expanded later
-            var transcript = await _gradeService.GetTranscriptAsync(studentId);
-            using var package = new ExcelPackage();
-            var worksheet = package.Workbook.Worksheets.Add("Bảng điểm");
+            TranscriptDto transcript = await _gradeService.GetTranscriptAsync(studentId);
+            using ExcelPackage package = new ExcelPackage();
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("Bảng điểm");
             worksheet.Cells[1, 1].Value = $"Bảng điểm: {transcript.StudentName}";
             worksheet.Cells[1, 1].Style.Font.Bold = true;
             return await package.GetAsByteArrayAsync();
@@ -427,9 +429,9 @@ namespace StudentManagement.Services.Services
 
         public async Task<byte[]> ExportTranscriptToPdfAsync(string studentId)
         {
-            var transcript = await _gradeService.GetTranscriptAsync(studentId);
+            TranscriptDto transcript = await _gradeService.GetTranscriptAsync(studentId);
             
-            var document = Document.Create(container =>
+            IDocument document = Document.Create(container =>
             {
                 container.Page(page =>
                 {
@@ -494,7 +496,7 @@ namespace StudentManagement.Services.Services
                             // Academic standing
                             column.Item().PaddingTop(10).Row(row =>
                             {
-                                var standing = transcript.CurrentGPA switch
+                                string standing = transcript.CurrentGPA switch
                                 {
                                     >= 3.6m => "Xuất sắc",
                                     >= 3.2m => "Giỏi",
@@ -508,7 +510,7 @@ namespace StudentManagement.Services.Services
                             });
 
                             // Grades by semester
-                            foreach (var semester in transcript.Semesters)
+                            foreach (SemesterGradesDto semester in transcript.Semesters)
                             {
                                 column.Item().PaddingTop(15).Text(
                                     $"HỌC KỲ {semester.Semester} - NĂM HỌC {semester.AcademicYear}"
@@ -542,9 +544,9 @@ namespace StudentManagement.Services.Services
 
                                     // Data rows
                                     int stt = 1;
-                                    foreach (var grade in semester.Grades)
+                                    foreach (GradeDto grade in semester.Grades)
                                     {
-                                        var rowColor = stt % 2 == 0 ? Colors.Grey.Lighten4 : Colors.White;
+                                        string rowColor = stt % 2 == 0 ? Colors.Grey.Lighten4 : Colors.White;
 
                                         table.Cell().Background(rowColor).Element(DataCellStyle).Text(stt.ToString());
                                         table.Cell().Background(rowColor).Element(DataCellStyle).Text(grade.SubjectCode);
@@ -620,12 +622,12 @@ namespace StudentManagement.Services.Services
                 .AlignMiddle();
         }
 
-                public async Task<byte[]> ExportClassRosterToPdfAsync(string classId)
+        public async Task<byte[]> ExportClassRosterToPdfAsync(string classId)
         {
-            var classDto = await _classService.GetByIdAsync(classId);
-            var students = await _classService.GetClassStudentsAsync(classId);
+            ClassDto classDto = await _classService.GetByIdAsync(classId);
+            List<StudentListDto> students = await _classService.GetClassStudentsAsync(classId);
 
-            var document = Document.Create(container =>
+            IDocument document = Document.Create(container =>
             {
                 container.Page(page =>
                 {
@@ -670,7 +672,7 @@ namespace StudentManagement.Services.Services
 
                             // Data
                             int stt = 1;
-                            foreach (var student in students.OrderBy(s => s.FullName))
+                            foreach (StudentListDto student in students.OrderBy((StudentListDto s) => s.FullName))
                             {
                                 table.Cell().Element(DataCellStyle).Text(stt.ToString());
                                 table.Cell().Element(DataCellStyle).Text(student.StudentCode);

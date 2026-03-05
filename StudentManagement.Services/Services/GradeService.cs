@@ -31,18 +31,13 @@ namespace StudentManagement.Services.Services
 
         public async Task<List<GradeDto>> GetBySectionAsync(string sectionId)
         {
-            // Get enrollments for the section
-            List<string> enrollmentIds = await _unitOfWork.Repository<Enrollment>()
-                .GetQueryable()
-                .Where(e => e.SectionID == sectionId)
-                .Select(e => e.EnrollmentID)
-                .ToListAsync();
-
+            // Single JOIN query instead of 2 separate queries
             List<Grade> grades = await _unitOfWork.Repository<Grade>()
                 .GetQueryable()
                 .Include(g => g.Student)
                 .Include(g => g.Subject)
-                .Where(g => enrollmentIds.Contains(g.EnrollmentID))
+                .Include(g => g.Enrollment)
+                .Where(g => g.Enrollment.SectionID == sectionId)
                 .ToListAsync();
 
             return _mapper.Map<List<GradeDto>>(grades);
@@ -204,8 +199,9 @@ namespace StudentManagement.Services.Services
                 .Where(g => g.StudentID == studentId)
                 .ToListAsync();
 
+            // var required here: GroupBy uses anonymous type which cannot be explicitly named
             var groupedGrades = grades
-                .GroupBy(g => new { g.AcademicYear, g.Semester })
+                .GroupBy((Grade g) => new { g.AcademicYear, g.Semester })
                 .OrderBy(g => g.Key.AcademicYear)
                 .ThenBy(g => g.Key.Semester);
 
@@ -302,10 +298,12 @@ namespace StudentManagement.Services.Services
 
         public async Task<List<GradeHistory>> GetGradeHistoryAsync(string gradeId)
         {
-            IEnumerable<GradeHistory> history = await _unitOfWork.Repository<GradeHistory>()
-                .FindAsync(h => h.GradeID == gradeId);
-
-            return history.OrderByDescending(h => h.ModifiedAt).ToList();
+            // Sort in SQL instead of in-memory
+            return await _unitOfWork.Repository<GradeHistory>()
+                .GetQueryable()
+                .Where(h => h.GradeID == gradeId)
+                .OrderByDescending(h => h.ModifiedAt)
+                .ToListAsync();
         }
     }
 }

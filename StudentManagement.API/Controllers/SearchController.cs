@@ -29,7 +29,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var results = await _searchService.SearchStudentsAsync(searchDto);
+                SearchResultDto<StudentDto> results = await _searchService.SearchStudentsAsync(searchDto);
                 return Ok(results);
             }
             catch (Exception ex)
@@ -49,7 +49,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var results = await _searchService.SearchByTextAsync(q, pageSize);
+                SearchResultDto<StudentDto> results = await _searchService.SearchByTextAsync(q, pageSize);
                 return Ok(results);
             }
             catch (Exception ex)

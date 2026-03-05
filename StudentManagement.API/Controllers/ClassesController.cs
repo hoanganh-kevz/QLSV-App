@@ -28,7 +28,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var classes = await _classService.GetAllAsync();
+                List<ClassListDto> classes = await _classService.GetAllAsync();
                 return Ok(classes);
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var classDto = await _classService.GetByIdAsync(id);
+                ClassDto classDto = await _classService.GetByIdAsync(id);
                 return Ok(classDto);
             }
             catch (KeyNotFoundException ex)
@@ -72,7 +72,7 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                var classDto = await _classService.CreateAsync(createDto);
+                ClassDto classDto = await _classService.CreateAsync(createDto);
                 return CreatedAtAction(nameof(GetById), new { id = classDto.ClassID }, classDto);
             }
             catch (Exception ex)
@@ -94,7 +94,7 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                var classDto = await _classService.UpdateAsync(id, updateDto);
+                ClassDto classDto = await _classService.UpdateAsync(id, updateDto);
                 return Ok(classDto);
             }
             catch (KeyNotFoundException ex)
@@ -117,7 +117,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var success = await _classService.DeleteAsync(id);
+                bool success = await _classService.DeleteAsync(id);
                 
                 if (!success)
                     return NotFound(new { message = "Class not found" });
@@ -143,7 +143,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var students = await _classService.GetClassStudentsAsync(id);
+                List<StudentListDto> students = await _classService.GetClassStudentsAsync(id);
                 return Ok(students);
             }
             catch (Exception ex)
@@ -189,7 +189,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var success = await _classService.RemoveStudentFromClassAsync(id, studentId);
+                bool success = await _classService.RemoveStudentFromClassAsync(id, studentId);
                 
                 if (!success)
                     return NotFound(new { message = "Student not found in class" });

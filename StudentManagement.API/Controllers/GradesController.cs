@@ -30,7 +30,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var grades = await _gradeService.GetBySectionAsync(sectionId);
+                List<GradeDto> grades = await _gradeService.GetBySectionAsync(sectionId);
                 return Ok(grades);
             }
             catch (Exception ex)
@@ -49,13 +49,13 @@ namespace StudentManagement.API.Controllers
             try
             {
                 // Students can only view their own transcript
-                var role = User.FindFirst(ClaimTypes.Role)?.Value;
-                var currentUserId = User.FindFirst("PersonId")?.Value;
+                string? role = User.FindFirst(ClaimTypes.Role)?.Value;
+                string? currentUserId = User.FindFirst("PersonId")?.Value;
                 
                 if (role == "Student" && currentUserId != studentId)
                     return Forbid();
 
-                var transcript = await _gradeService.GetTranscriptAsync(studentId);
+                TranscriptDto transcript = await _gradeService.GetTranscriptAsync(studentId);
                 return Ok(transcript);
             }
             catch (KeyNotFoundException ex)
@@ -81,8 +81,8 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var grade = await _gradeService.CreateAsync(createDto, userId);
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                GradeDto grade = await _gradeService.CreateAsync(createDto, userId);
                 return CreatedAtAction(nameof(GetById), new { id = grade.GradeID }, grade);
             }
             catch (InvalidOperationException ex)
@@ -110,8 +110,8 @@ namespace StudentManagement.API.Controllers
 
             try
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var grade = await _gradeService.UpdateComponentAsync(id, updateDto, userId);
+                string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                GradeDto grade = await _gradeService.UpdateComponentAsync(id, updateDto, userId);
                 return Ok(grade);
             }
             catch (KeyNotFoundException ex)
@@ -138,7 +138,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var distribution = await _gradeService.GetGradeDistributionAsync(sectionId);
+                Dictionary<string, int> distribution = await _gradeService.GetGradeDistributionAsync(sectionId);
                 return Ok(distribution);
             }
             catch (Exception ex)
@@ -157,7 +157,7 @@ namespace StudentManagement.API.Controllers
         {
             try
             {
-                var history = await _gradeService.GetGradeHistoryAsync(id);
+                List<GradeHistory> history = await _gradeService.GetGradeHistoryAsync(id);
                 return Ok(history);
             }
             catch (Exception ex)
@@ -170,7 +170,7 @@ namespace StudentManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GradeDto>> GetById(string id)
         {
-            var grade = await _gradeService.GetByIdAsync(id);
+            GradeDto grade = await _gradeService.GetByIdAsync(id);
             if (grade == null)
                 return NotFound();
             return Ok(grade);

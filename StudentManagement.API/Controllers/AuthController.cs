@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Core.DTOs.Auth;
+using StudentManagement.Core.DTOs.User;
 using StudentManagement.Core.Interfaces.Services;
 using System.Security.Claims;
 
@@ -29,12 +30,12 @@ namespace StudentManagement.API.Controllers
             try
             {
                 AuthResponseDto result = await _authService.LoginAsync(loginDto);
-                _logger.LogInformation($"User {loginDto.Username} logged in successfully");
+                _logger.LogInformation("User {Username} logged in successfully", loginDto.Username);
                 return Ok(result);
             }
             catch (UnauthorizedAccessException ex)
             {
-                _logger.LogWarning($"Failed login attempt for user {loginDto.Username}");
+                _logger.LogWarning("Failed login attempt for user {Username}", loginDto.Username);
                 return Unauthorized(new { message = ex.Message });
             }
         }
@@ -43,13 +44,13 @@ namespace StudentManagement.API.Controllers
         /// Register a new user (Admin only in production)
         /// </summary>
         [HttpPost("register")]
-        [AllowAnonymous] // Change to [Authorize(Roles = "Admin")] in production
+        [AllowAnonymous]
         public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterDto registerDto)
         {
             try
             {
                 AuthResponseDto result = await _authService.RegisterAsync(registerDto);
-                _logger.LogInformation($"New user {registerDto.Username} registered successfully");
+                _logger.LogInformation("New user {Username} registered successfully", registerDto.Username);
                 return CreatedAtAction(nameof(GetProfile), new { }, result);
             }
             catch (InvalidOperationException ex)
@@ -91,12 +92,12 @@ namespace StudentManagement.API.Controllers
             try
             {
                 string? accountId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                
+
                 if (string.IsNullOrEmpty(accountId))
                     return Unauthorized();
 
                 bool result = await _authService.ChangePasswordAsync(accountId, dto.CurrentPassword, dto.NewPassword);
-                
+
                 return Ok(new { message = "Password changed successfully" });
             }
             catch (UnauthorizedAccessException ex)
@@ -104,12 +105,5 @@ namespace StudentManagement.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-    }
-
-    // DTO for change password
-    public class ChangePasswordDto
-    {
-        public string CurrentPassword { get; set; } = string.Empty;
-        public string NewPassword { get; set; } = string.Empty;
     }
 }
