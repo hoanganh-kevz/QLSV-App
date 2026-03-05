@@ -28,6 +28,13 @@ builder.Services.ConfigureServices();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.ConfigureCors();
 
+// Redis caching
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration["Redis:ConnectionString"];
+    options.InstanceName = builder.Configuration["Redis:InstanceName"];
+});
+
 WebApplication app = builder.Build();
 
 if (args.Contains("--seed"))
