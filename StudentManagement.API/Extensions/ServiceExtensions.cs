@@ -18,7 +18,7 @@ namespace StudentManagement.API.Extensions
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
+                    configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
                     b => b.MigrationsAssembly("StudentManagement.Infrastructure")
                 )
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)

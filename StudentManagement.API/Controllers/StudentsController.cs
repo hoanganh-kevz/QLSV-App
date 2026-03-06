@@ -257,6 +257,7 @@ namespace StudentManagement.API.Controllers
                 return StatusCode(500, new { message = "Internal server error" });
             }
         }
+
     }
 
     // Helper DTOs

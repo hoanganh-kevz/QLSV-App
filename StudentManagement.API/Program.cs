@@ -94,6 +94,7 @@ builder.Services.AddAuthorization(options =>
         policy.Requirements.Add(new PermissionRequirement(Permissions.ManageUsers)));
 });
 
+// Add permission handler
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
 WebApplication app = builder.Build();
@@ -117,6 +118,81 @@ if (args.Contains("--seed"))
 //     Authorization = new[] { new HangfireAuthorizationFilter() }
 // });
 
+// Enable XML documentation
+builder.Services.AddControllers()
+    .AddXmlSerializerFormatters()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressMapClientErrors = true;
+    });
+
+// Add Swagger
+builder.Services.AddSwaggerDocumentation();
+
+builder.Services.AddFluentValidation(config =>
+{
+    config.RegisterValidatorsFromAssemblyContaining<CreateStudentValidator>();
+    config.AutomaticValidationEnabled = true;
+});
+
+builder.Services.AddRateLimiting(builder.Configuration);
+
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+    options.EnableAdaptiveSampling = true;
+    options.EnableDebugLogger = builder.Environment.IsDevelopment();
+});
+
+// Health checks
+builder.Services.AddHealthChecks(builder.Configuration);
+
+try
+{
+    Log.Information("Starting Student Management System API");
+    
+    var builder = WebApplication.CreateBuilder(args);
+    builder.ConfigureSerilog();
+    
+    // ... rest of configuration
+    
+    var app = builder.Build();
+    
+    app.UseSerilogRequestLogging(options =>
+    {
+        options.MessageTemplate = "HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000} ms";
+        options.EnrichDiagnosticContext = (diagnosticContext, httpContext) =>
+        {
+            diagnosticContext.Set("RequestHost", httpContext.Request.Host.Value);
+            diagnosticContext.Set("RequestScheme", httpContext.Request.Scheme);
+            diagnosticContext.Set("UserAgent", httpContext.Request.Headers["User-Agent"]);
+            diagnosticContext.Set("RemoteIP", httpContext.Connection.RemoteIpAddress);
+        };
+    });
+    
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+
+// Map endpoints
+app.MapHealthCheckEndpoints();
+
+// Add security headers
+app.UseSecurityHeaders();
+
+// In middleware pipeline (before MVC)
+app.UseIpRateLimiting();
+
+// In middleware pipeline
+app.UseSwaggerDocumentation();
+
 // Configure the HTTP request pipeline
 app.UseMiddleware<ExceptionMiddleware>();
 
@@ -128,15 +204,24 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = "swagger";
 });
 
+// Add CORS
+app.UseCors("AllowSpecificOrigins");
+
+// Add HTTPS redirection
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
+// Add authentication
 app.UseAuthentication();
+
+// Add authorization
 app.UseAuthorization();
 
+// Add controllers
 app.MapControllers();
 
+// Run
 app.Run();
 
 // dotnet run --project StudentManagement.API
