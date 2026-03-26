@@ -1,0 +1,13 @@
+﻿  Determining projects to restore...
+C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj : error NU1301: Unable to load the service index for source https://api.nuget.org/v3/index.json.
+C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj : error NU1301:   A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. (api.nuget.org:443)
+C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj : error NU1301:   A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+  Failed to restore C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj (in 4,32 min).
+C:\AppQLSV\StudentManagement.Services\StudentManagement.Services.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj]
+C:\AppQLSV\StudentManagement.Infrastructure\StudentManagement.Infrastructure.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj]
+  Restored C:\AppQLSV\StudentManagement.Services\StudentManagement.Services.csproj (in 8,64 min).
+  Restored C:\AppQLSV\StudentManagement.Infrastructure\StudentManagement.Infrastructure.csproj (in 8,64 min).
+  1 of 4 projects are up-to-date for restore.
+  Determining projects to restore...
+C:\AppQLSV\StudentManagement.Infrastructure\StudentManagement.Infrastructure.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj]
+C:\AppQLSV\StudentManagement.Services\StudentManagement.Services.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json. [C:\AppQLSV\StudentManagement.API\StudentManagement.API.csproj]

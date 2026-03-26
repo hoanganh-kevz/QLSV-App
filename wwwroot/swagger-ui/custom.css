@@ -1,0 +1,51 @@
+/* Custom Swagger UI Theme */
+.swagger-ui .topbar {
+    background-color: #1890ff;
+}
+
+.swagger-ui .topbar .download-url-wrapper .download-url-button {
+    background-color: #52c41a;
+}
+
+.swagger-ui .info .title {
+    color: #1890ff;
+}
+
+.swagger-ui .info .title small.version-stamp {
+    background-color: #52c41a;
+}
+
+.swagger-ui .opblock.opblock-post {
+    border-color: #52c41a;
+    background: rgba(82, 196, 26, 0.1);
+}
+
+.swagger-ui .opblock.opblock-get {
+    border-color: #1890ff;
+    background: rgba(24, 144, 255, 0.1);
+}
+
+.swagger-ui .opblock.opblock-put {
+    border-color: #faad14;
+    background: rgba(250, 173, 20, 0.1);
+}
+
+.swagger-ui .opblock.opblock-delete {
+    border-color: #ff4d4f;
+    background: rgba(255, 77, 79, 0.1);
+}
+
+.swagger-ui .opblock-tag {
+    border-bottom: 2px solid #e8e8e8;
+    padding: 10px 20px;
+}
+
+.swagger-ui .opblock-tag:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.swagger-ui .scheme-container {
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 4px;
+}
