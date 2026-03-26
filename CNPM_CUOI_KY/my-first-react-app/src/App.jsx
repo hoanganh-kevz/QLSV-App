@@ -3,39 +3,83 @@ import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/Auth/ProtectedRoute'
 import AppLayout from './components/Layout/AppLayout'
 import LoginPage from './pages/Login/LoginPage'
+import HomePage from './pages/Dashboard/HomePage'
+import DashboardPage from './pages/Dashboard/DashboardPage'
+import StudentsPage from './pages/Students/StudentsPage'
+import ClassesPage from './pages/Classes/ClassesPage'
+import SubjectsPage from './pages/Subjects/SubjectsPage'
+import TeachersPage from './pages/Teachers/TeachersPage'
+import GradeEntryPage from './pages/Grades/GradeEntryPage'
+import TranscriptPage from './pages/Grades/TranscriptPage'
 import './App.css'
 
+import { ConfigProvider } from 'antd';
+
 // Placeholder components for nested routes
-const Home = () => <div><h2>Home Dashboard</h2><p>Welcome to the main application area.</p></div>;
-const Dashboard = () => <div><h2>Detailed Dashboard</h2><p>Here are your stats.</p></div>;
 const Profile = () => <div><h2>User Profile</h2><p>Manage your settings here.</p></div>;
 
 function App() {
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#0A6C5B',
+          borderRadius: 8,
+          fontFamily: '"Inter", system-ui, Avenir, Helvetica, Arial, sans-serif',
+          colorBgContainer: '#ffffff',
+        },
+        components: {
+          Button: {
+            controlHeightLG: 48,
+            borderRadiusLG: 8,
+            fontWeight: 600,
+          },
+          Input: {
+            controlHeightLG: 48,
+            borderRadiusLG: 8,
+          }
+        }
+      }}
+    >
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <AppLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Home />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<div><h2>Settings</h2></div>} />
-          </Route>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<HomePage />} />
+              <Route path="dashboard" element={<DashboardPage />} />
+              
+              {/* Admin only routes */}
+              <Route path="users" element={<ProtectedRoute allowedRoles={['admin']}><div><h2>User Management</h2></div></ProtectedRoute>} />
+              <Route path="teachers" element={<ProtectedRoute allowedRoles={['admin']}><TeachersPage /></ProtectedRoute>} />
+              <Route path="students" element={<ProtectedRoute allowedRoles={['admin']}><StudentsPage /></ProtectedRoute>} />
+              <Route path="classes" element={<ProtectedRoute allowedRoles={['admin']}><ClassesPage /></ProtectedRoute>} />
+              <Route path="subjects" element={<ProtectedRoute allowedRoles={['admin']}><SubjectsPage /></ProtectedRoute>} />
 
-          {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </AuthProvider>
-    </Router>
+              {/* Teacher routes */}
+              <Route path="grade-entry" element={<ProtectedRoute allowedRoles={['teacher', 'admin']}><GradeEntryPage /></ProtectedRoute>} />
+
+              {/* Student routes */}
+              <Route path="transcript" element={<ProtectedRoute allowedRoles={['student']}><TranscriptPage /></ProtectedRoute>} />
+
+              {/* Shared routes */}
+              <Route path="profile" element={<Profile />} />
+            </Route>
+
+            {/* Fallback route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AuthProvider>
+      </Router>
+    </ConfigProvider>
   )
 }
 

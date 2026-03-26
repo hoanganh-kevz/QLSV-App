@@ -2,7 +2,7 @@ using AspNetCoreRateLimit;
 
 namespace StudentManagement.API.Configuration
 {
-    public static class RateLimitConfiguration
+    public static class RateLimitExtensions
     {
         public static IServiceCollection AddRateLimiting(this IServiceCollection services, IConfiguration configuration)
         {

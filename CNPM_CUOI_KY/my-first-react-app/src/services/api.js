@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// You can use a .env variable like process.env.REACT_APP_API_URL here
-// For demonstration, we'll use a placeholder or reqres.in for testing
-const API_URL = 'https://reqres.in/api'; 
+// Use the environment variable for the real ASP.NET Core Backend
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5253/api'; 
 
 const api = axios.create({
   baseURL: API_URL,
@@ -14,7 +13,7 @@ const api = axios.create({
 // Request interceptor to add the auth token
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -36,6 +35,8 @@ api.interceptors.response.use(
       console.warn("Unauthorized access detected (401), clearing token.");
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
       window.location.href = '/login'; // Force redirect to login
     }
     return Promise.reject(error);

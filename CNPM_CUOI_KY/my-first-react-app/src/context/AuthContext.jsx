@@ -46,9 +46,10 @@ export const AuthProvider = ({ children }) => {
         if (rememberMe) {
             localStorage.setItem('token', authToken);
             localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+            sessionStorage.setItem('token', authToken);
+            sessionStorage.setItem('user', JSON.stringify(userData));
         }
-        // Alternatively, using sessionStorage for not-remember-me is possible, 
-        // but we'll stick to a simple localStorage implementation for now
     };
 
     const logout = () => {

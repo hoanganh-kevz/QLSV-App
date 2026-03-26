@@ -10,58 +10,20 @@ namespace StudentManagement.API.Configuration
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            // Custom health checks
             services.AddHealthChecks()
-                // Database health check
-                .AddSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
-                    name: "SQL Server",
-                    failureStatus: HealthStatus.Degraded,
-                    tags: new[] { "db", "sql", "sqlserver" })
-                
-                // Redis health check (if using caching)
-                .AddRedis(
-                    configuration["Redis:ConnectionString"],
-                    name: "Redis Cache",
-                    failureStatus: HealthStatus.Degraded,
-                    tags: new[] { "cache", "redis" })
-                
-                // Custom health checks
                 .AddCheck<ApiHealthCheck>("API Health")
                 .AddCheck<MemoryHealthCheck>("Memory")
                 .AddCheck<DiskSpaceHealthCheck>("Disk Space");
-
-            // Health checks UI
-            services.AddHealthChecksUI(setup =>
-            {
-                setup.SetEvaluationTimeInSeconds(30);
-                setup.MaximumHistoryEntriesPerEndpoint(50);
-                setup.AddHealthCheckEndpoint("API", "/health");
-            })
-            .AddInMemoryStorage();
 
             return services;
         }
 
         public static void MapHealthCheckEndpoints(this WebApplication app)
         {
-            app.MapHealthChecks("/health", new HealthCheckOptions
-            {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
-            app.MapHealthChecks("/health/ready", new HealthCheckOptions
-            {
-                Predicate = check => check.Tags.Contains("ready"),
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
-            app.MapHealthChecks("/health/live", new HealthCheckOptions
-            {
-                Predicate = _ => false,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
-            app.MapHealthChecksUI(options => options.UIPath = "/health-ui");
+            app.MapHealthChecks("/health");
+            app.MapHealthChecks("/health/ready");
+            app.MapHealthChecks("/health/live");
         }
     }
 

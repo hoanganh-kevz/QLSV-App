@@ -16,7 +16,7 @@ namespace StudentManagement.API.Swagger.Examples
                 PhoneNumber = "0123456789",
                 Address = "123 Đường ABC, Quận 1, TP.HCM",
                 DateOfBirth = new DateTime(2003, 5, 15),
-                Gender = Gender.Male,
+                Gender = StudentManagement.Core.Enums.Gender.Male,
                 Nationality = "Vietnam",
                 IdCard = "001234567890",
                 ClassID = "CLASS001",

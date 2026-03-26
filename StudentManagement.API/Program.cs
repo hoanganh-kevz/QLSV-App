@@ -8,6 +8,9 @@ using StudentManagement.API.Swagger;
 using StudentManagement.API.Validation;
 using StudentManagement.Core.Authorization;
 using StudentManagement.Infrastructure.Data;
+using StudentManagement.API.Configuration;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Serilog;
 
 // Configure Serilog early for startup logging
@@ -55,11 +58,8 @@ try
     builder.Services.AddSwaggerDocumentation();
 
     // FluentValidation
-    builder.Services.AddFluentValidation(config =>
-    {
-        config.RegisterValidatorsFromAssemblyContaining<CreateStudentValidator>();
-        config.AutomaticValidationEnabled = true;
-    });
+    builder.Services.AddValidatorsFromAssemblyContaining<CreateStudentValidator>();
+    builder.Services.AddFluentValidationAutoValidation();
 
     // Rate limiting
     builder.Services.AddRateLimiting(builder.Configuration);
@@ -122,6 +122,9 @@ try
     // ==================== Middleware Pipeline ====================
     // Order matters: exception handling first, then logging, security, auth, endpoints
 
+    // 7. CORS (Must be before exception handling so errors get CORS headers)
+    app.UseCors("AllowAll");
+
     // 1. Global exception handling (outermost)
     app.UseMiddleware<ExceptionMiddleware>();
 
@@ -149,9 +152,6 @@ try
 
     // 6. HTTPS redirection
     app.UseHttpsRedirection();
-
-    // 7. CORS
-    app.UseCors("AllowAll");
 
     // 8. Authentication & Authorization
     app.UseAuthentication();
