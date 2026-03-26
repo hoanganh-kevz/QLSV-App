@@ -26,6 +26,48 @@ namespace StudentManagement.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserListDto>> GetById(string id)
+        {
+            try
+            {
+                UserListDto result = await _userService.GetUserByIdAsync(id);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<UserListDto>> Create([FromBody] CreateUserDto createDto)
+        {
+            try
+            {
+                UserListDto result = await _userService.CreateUserAsync(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = result.AccountID }, result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserListDto>> Update(string id, [FromBody] UpdateUserDto updateDto)
+        {
+            try
+            {
+                UserListDto result = await _userService.UpdateUserAsync(id, updateDto);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
         [HttpPost("{id}/activate")]
         public async Task<IActionResult> Activate(string id)
         {

@@ -11,6 +11,9 @@ namespace StudentManagement.Infrastructure.Data
             if (context.Accounts.Any())
             {
                 Console.WriteLine("Clearing existing data...");
+                context.Grades.RemoveRange(context.Grades);
+                context.Enrollments.RemoveRange(context.Enrollments);
+                context.CourseSections.RemoveRange(context.CourseSections);
                 context.Students.RemoveRange(context.Students);
                 context.Teachers.RemoveRange(context.Teachers);
                 context.Admins.RemoveRange(context.Admins);
@@ -68,7 +71,7 @@ namespace StudentManagement.Infrastructure.Data
             }
             await context.SaveChangesAsync();
 
-            // ── 3. Create Subjects ──
+            // ── 3. Create 15 Subjects ──
             List<Subject> subjects = new List<Subject>();
             (string, string, int)[] subjectData = new[]
             {
@@ -76,18 +79,23 @@ namespace StudentManagement.Infrastructure.Data
                 ("CS102", "Cấu trúc Dữ liệu", 3),
                 ("CS201", "Cơ sở Dữ liệu", 3),
                 ("CS301", "Mạng Máy tính", 3),
+                ("CS302", "Lập trình Web", 3),
                 ("MATH101", "Toán Cao cấp 1", 3),
                 ("MATH102", "Toán Cao cấp 2", 3),
                 ("MATH201", "Xác suất Thống kê", 2),
                 ("ENG101", "Tiếng Anh 1", 2),
                 ("ENG102", "Tiếng Anh 2", 2),
-                ("PHY101", "Vật lý Đại cương", 3)
+                ("PHY101", "Vật lý Đại cương", 3),
+                ("CS303", "Trí tuệ Nhân tạo", 3),
+                ("CS304", "Hệ điều hành", 3),
+                ("CS305", "Công nghệ Phần mềm", 3),
+                ("CS401", "Đồ án Tốt nghiệp", 6)
             };
             for (int i = 0; i < subjectData.Length; i++)
             {
                 Subject subject = new Subject(subjectData[i].Item1, subjectData[i].Item2, subjectData[i].Item3)
                 {
-                    DepartmentID = departments[i < 4 ? 0 : (i < 7 ? 0 : (i < 9 ? 2 : 0))].DepartmentID
+                    DepartmentID = departments[i < 5 ? 0 : (i < 8 ? 0 : (i < 10 ? 2 : 0))].DepartmentID
                 };
                 subjects.Add(subject);
                 context.Subjects.Add(subject);
@@ -110,8 +118,13 @@ namespace StudentManagement.Infrastructure.Data
             admin.SetAccount(adminAccount.AccountID);
             context.Admins.Add(admin);
 
-            // ── 5. Create Teachers ──
+            // ── 5. Create 5 Teachers ──
             List<Teacher> teachers = new List<Teacher>();
+            string[] teacherNames = new[]
+            {
+                "Trần Văn Minh", "Nguyễn Thị Hồng", "Lê Hoàng Phúc",
+                "Phạm Thị Mai", "Vũ Đình Khoa"
+            };
             for (int i = 1; i <= 5; i++)
             {
                 Account teacherAccount = new Account($"teacher{i}", "teacher123", AccountRole.Teacher);
@@ -119,7 +132,7 @@ namespace StudentManagement.Infrastructure.Data
                 await context.SaveChangesAsync();
 
                 Teacher teacher = new Teacher(
-                    $"Giảng Viên {i}",
+                    teacherNames[i - 1],
                     $"teacher{i}@school.edu",
                     $"090123456{i}",
                     new DateTime(1980 + i, 3, 10),
@@ -134,61 +147,95 @@ namespace StudentManagement.Infrastructure.Data
             }
             await context.SaveChangesAsync();
 
-            // ── 6. Create Classes ──
+            // ── 6. Create 10 Classes ──
             List<Class> classes = new List<Class>();
-            for (int i = 1; i <= 5; i++)
+            string[] classNames = new[]
             {
-                Class cls = new Class($"CNTT{i:D2}", "K24", 2024)
+                "CNTT01", "CNTT02", "CNTT03", "KTPM01", "KTPM02",
+                "HTTT01", "QTKD01", "QTKD02", "NNAS01", "NNAS02"
+            };
+            for (int i = 0; i < 10; i++)
+            {
+                Class cls = new Class(classNames[i], "K24", 2024)
                 {
-                    MajorID = majors[(i - 1) % majors.Count].MajorID,
-                    AdvisorID = teachers[(i - 1) % teachers.Count].Id
+                    MajorID = majors[i % majors.Count].MajorID,
+                    AdvisorID = teachers[i % teachers.Count].Id
                 };
                 classes.Add(cls);
                 context.Classes.Add(cls);
             }
             await context.SaveChangesAsync();
 
-            // ── 7. Create Students ──
+            // ── 7. Create 55 Students ──
+            string[] firstNames = new[]
+            {
+                "Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Huỳnh", "Phan",
+                "Vũ", "Võ", "Đặng", "Bùi", "Đỗ", "Hồ", "Ngô", "Dương"
+            };
+            string[] middleNames = new[]
+            {
+                "Văn", "Thị", "Hoàng", "Minh", "Đức", "Thanh", "Quốc",
+                "Ngọc", "Phương", "Hữu"
+            };
+            string[] lastNames = new[]
+            {
+                "An", "Bình", "Cường", "Dũng", "Em", "Phúc", "Giang",
+                "Hải", "Khang", "Linh", "Minh", "Nam", "Oanh", "Phong",
+                "Quân", "Sơn", "Tâm", "Uyên", "Vinh", "Xuân"
+            };
+
             List<Student> students = new List<Student>();
-            for (int i = 1; i <= 20; i++)
+            Random rng = new Random(42); // Fixed seed for reproducibility
+
+            for (int i = 1; i <= 55; i++)
             {
                 Account studentAccount = new Account($"student{i}", "student123", AccountRole.Student);
                 context.Accounts.Add(studentAccount);
                 await context.SaveChangesAsync();
 
+                string fullName = $"{firstNames[i % firstNames.Length]} {middleNames[i % middleNames.Length]} {lastNames[i % lastNames.Length]}";
+                Gender gender = i % 3 == 0 ? Gender.Female : Gender.Male;
+
                 Student student = new Student(
-                    $"Sinh Viên {i}",
+                    fullName,
                     $"student{i}@school.edu",
-                    $"091234567{i:D2}",
+                    $"09{rng.Next(10000000, 99999999)}",
                     new DateTime(2002 + (i % 4), (i % 12) + 1, (i % 28) + 1),
-                    i % 3 == 0 ? Gender.Female : Gender.Male,
+                    gender,
                     $"3124100{i:D4}",
                     2024,
                     "K24"
                 );
                 student.SetAccount(studentAccount.AccountID);
                 student.SetClassAndMajor(
-                    classes[(i - 1) % classes.Count].ClassID,
-                    majors[(i - 1) % majors.Count].MajorID
+                    classes[i % classes.Count].ClassID,
+                    majors[i % majors.Count].MajorID
                 );
                 students.Add(student);
                 context.Students.Add(student);
             }
-
             await context.SaveChangesAsync();
 
             // ── 8. Create CourseSections ──
             List<string> studentIds = students.Select(s => s.Id).ToList();
             List<CourseSection> sections = new List<CourseSection>();
-            for (int i = 0; i < 5; i++)
+            string[] schedules = new[]
+            {
+                "T2: 7:00-9:30", "T2: 9:45-12:15", "T3: 7:00-9:30",
+                "T3: 13:00-15:30", "T4: 7:00-9:30", "T4: 9:45-12:15",
+                "T5: 7:00-9:30", "T5: 13:00-15:30", "T6: 7:00-9:30",
+                "T6: 9:45-12:15"
+            };
+
+            for (int i = 0; i < 10; i++)
             {
                 CourseSection section = new CourseSection
                 {
-                    SubjectID = subjects[i].SubjectID,
+                    SubjectID = subjects[i % subjects.Count].SubjectID,
                     TeacherID = teachers[i % teachers.Count].Id,
-                    Semester = 1,
+                    Semester = i < 5 ? 1 : 2,
                     AcademicYear = "2024-2025",
-                    Schedule = $"T{(i + 2)}: 7:00-9:30",
+                    Schedule = schedules[i],
                     MaxStudents = 50,
                     Status = "InProgress"
                 };
@@ -199,7 +246,7 @@ namespace StudentManagement.Infrastructure.Data
 
             // ── 9. Create Enrollments ──
             List<Enrollment> enrollments = new List<Enrollment>();
-            for (int i = 0; i < studentIds.Count && i < 10; i++)
+            for (int i = 0; i < studentIds.Count && i < 30; i++)
             {
                 Enrollment enrollment = new Enrollment
                 {
@@ -212,11 +259,54 @@ namespace StudentManagement.Infrastructure.Data
             }
             await context.SaveChangesAsync();
 
+            // ── 10. Create 220+ Grade records ──
+            int gradeCount = 0;
+            for (int s = 0; s < Math.Min(studentIds.Count, 50); s++)
+            {
+                // Each student gets 4-5 grades across different subjects
+                int numGrades = 4 + (s % 2);
+                for (int g = 0; g < numGrades; g++)
+                {
+                    int subjectIdx = (s + g) % subjects.Count;
+                    int sectionIdx = (s + g) % sections.Count;
+
+                    double attendance = Math.Round(3.0 + rng.NextDouble() * 7.0, 1);
+                    double midterm = Math.Round(2.0 + rng.NextDouble() * 8.0, 1);
+                    double finalScore = Math.Round(2.0 + rng.NextDouble() * 8.0, 1);
+
+                    // Clamp to 0-10
+                    attendance = Math.Min(10.0, Math.Max(0.0, attendance));
+                    midterm = Math.Min(10.0, Math.Max(0.0, midterm));
+                    finalScore = Math.Min(10.0, Math.Max(0.0, finalScore));
+
+                    string enrollmentId = enrollments
+                        .FirstOrDefault(e => e.StudentID == studentIds[s] && e.SectionID == sections[sectionIdx].SectionID)?.EnrollmentID 
+                        ?? Guid.NewGuid().ToString();
+
+                    Grade grade = new Grade
+                    {
+                        StudentID = studentIds[s],
+                        SubjectID = subjects[subjectIdx].SubjectID,
+                        Semester = g < 3 ? 1 : 2,
+                        EnrollmentID = enrollmentId,
+                        AcademicYear = "2024-2025"
+                    };
+                    grade.UpdateComponent("Attendance", (decimal)attendance, "System");
+                    grade.UpdateComponent("Midterm", (decimal)midterm, "System");
+                    grade.UpdateComponent("Final", (decimal)finalScore, "System");
+
+                    context.Grades.Add(grade);
+                    gradeCount++;
+                }
+            }
+            await context.SaveChangesAsync();
+
             Console.WriteLine("Database seeded successfully!");
-            Console.WriteLine($"Created: 1 Admin, {teachers.Count} Teachers, 20 Students, " +
+            Console.WriteLine($"Created: 1 Admin, {teachers.Count} Teachers, {students.Count} Students, " +
                               $"{departments.Count} Departments, {majors.Count} Majors, " +
                               $"{subjects.Count} Subjects, {classes.Count} Classes, " +
-                              $"{sections.Count} Sections, {enrollments.Count} Enrollments");
+                              $"{sections.Count} Sections, {enrollments.Count} Enrollments, " +
+                              $"{gradeCount} Grades");
         }
     }
 }

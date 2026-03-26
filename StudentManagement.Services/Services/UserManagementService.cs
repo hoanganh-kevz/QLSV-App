@@ -80,6 +80,119 @@ namespace StudentManagement.Services.Services
             };
         }
 
+        public async Task<UserListDto> GetUserByIdAsync(string accountId)
+        {
+            Account? account = await _unitOfWork.Repository<Account>().GetByIdAsync(accountId);
+            if (account == null)
+                throw new KeyNotFoundException($"User with ID {accountId} not found");
+
+            Person? person = await _unitOfWork.Repository<Person>()
+                .FirstOrDefaultAsync((Person p) => p.AccountID == account.AccountID);
+
+            return new UserListDto
+            {
+                AccountID = account.AccountID,
+                Username = account.Username,
+                Role = account.Role.ToString(),
+                FullName = person?.FullName ?? "N/A",
+                Email = person?.Email ?? "N/A",
+                IsActive = account.IsActive,
+                LastLogin = account.LastLogin,
+                CreatedAt = account.CreatedAt,
+                FailedLoginAttempts = account.FailedLoginAttempts
+            };
+        }
+
+        public async Task<UserListDto> CreateUserAsync(CreateUserDto createDto)
+        {
+            // Check duplicate username
+            Account? existing = await _unitOfWork.Repository<Account>()
+                .FirstOrDefaultAsync((Account a) => a.Username == createDto.Username);
+            if (existing != null)
+                throw new InvalidOperationException("Username already exists");
+
+            // Parse role
+            AccountRole role = Enum.Parse<AccountRole>(createDto.Role);
+
+            // Create account
+            Account account = new Account(createDto.Username, createDto.Password, role);
+            await _unitOfWork.Repository<Account>().AddAsync(account);
+            await _unitOfWork.SaveChangesAsync();
+
+            // Create person based on role
+            Gender gender = Enum.TryParse<Gender>(createDto.Gender, out Gender g) ? g : Gender.Male;
+
+            if (role == AccountRole.Admin)
+            {
+                Admin admin = new Admin(
+                    createDto.FullName, createDto.Email, createDto.PhoneNumber,
+                    createDto.DateOfBirth, gender,
+                    $"AD{DateTime.Now:yyyyMMddHHmmss}"
+                );
+                admin.SetAccount(account.AccountID);
+                await _unitOfWork.Repository<Admin>().AddAsync(admin);
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new UserListDto
+            {
+                AccountID = account.AccountID,
+                Username = account.Username,
+                Role = account.Role.ToString(),
+                FullName = createDto.FullName,
+                Email = createDto.Email,
+                IsActive = account.IsActive,
+                CreatedAt = account.CreatedAt
+            };
+        }
+
+        public async Task<UserListDto> UpdateUserAsync(string accountId, UpdateUserDto updateDto)
+        {
+            Account? account = await _unitOfWork.Repository<Account>().GetByIdAsync(accountId);
+            if (account == null)
+                throw new KeyNotFoundException($"User with ID {accountId} not found");
+
+            // Update IsActive if provided
+            if (updateDto.IsActive.HasValue)
+            {
+                if (updateDto.IsActive.Value)
+                    account.Activate();
+                else
+                    account.Deactivate();
+            }
+
+            // Update person info if provided
+            Person? person = await _unitOfWork.Repository<Person>()
+                .FirstOrDefaultAsync((Person p) => p.AccountID == accountId);
+
+            if (person != null)
+            {
+                person.UpdatePersonInfo(
+                    updateDto.FullName ?? person.FullName,
+                    updateDto.Email ?? person.Email,
+                    updateDto.PhoneNumber ?? person.PhoneNumber,
+                    person.DateOfBirth,
+                    person.Gender
+                );
+            }
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return new UserListDto
+            {
+                AccountID = account.AccountID,
+                Username = account.Username,
+                Role = account.Role.ToString(),
+                FullName = person?.FullName ?? "N/A",
+                Email = person?.Email ?? "N/A",
+                IsActive = account.IsActive,
+                LastLogin = account.LastLogin,
+                CreatedAt = account.CreatedAt,
+                FailedLoginAttempts = account.FailedLoginAttempts
+            };
+        }
+
         public async Task<bool> ActivateUserAsync(string accountId)
         {
             Account? account = await _unitOfWork.Repository<Account>().GetByIdAsync(accountId);

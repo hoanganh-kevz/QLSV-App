@@ -23,12 +23,12 @@ namespace StudentManagement.Infrastructure.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return await _dbSet.ToListAsync();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
 
         public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
@@ -70,6 +70,11 @@ namespace StudentManagement.Infrastructure.Repositories
         public IQueryable<T> GetQueryable()
         {
             return _dbSet.AsQueryable();
+        }
+
+        public IQueryable<T> GetQueryableNoTracking()
+        {
+            return _dbSet.AsNoTracking().AsQueryable();
         }
     }
 }
