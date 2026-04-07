@@ -22,135 +22,28 @@ namespace StudentManagement.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("StudentManagement.Core.Entities.Student", b =>
+            modelBuilder.Entity("StudentManagement.Core.Entities.Account", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Avatar")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("Active");
-
-                    b.Property<string>("StudentCode")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Students", (string)null);
-                });
-
-            modelBuilder.Entity("StudentManagement.Core.Entities.Teacher", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Department")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TeacherCode")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Teachers", (string)null);
-                });
-
-            modelBuilder.Entity("StudentManagement.Core.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("AccountID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("FailedLoginAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastLogin")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PersonID")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
@@ -159,33 +52,762 @@ namespace StudentManagement.Infrastructure.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("AccountID");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Class", b =>
+                {
+                    b.Property<string>("ClassID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("AdvisorID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("MajorID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("MaxCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StartYear")
+                        .HasColumnType("int");
+
+                    b.HasKey("ClassID");
+
+                    b.HasIndex("AdvisorID");
+
+                    b.HasIndex("ClassName")
+                        .IsUnique();
+
+                    b.HasIndex("MajorID");
+
+                    b.ToTable("Classes");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.CourseSection", b =>
+                {
+                    b.Property<string>("SectionID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<int>("MaxStudents")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomID")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Schedule")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Semester")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("TeacherID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("SectionID");
+
+                    b.HasIndex("SubjectID");
+
+                    b.HasIndex("TeacherID");
+
+                    b.ToTable("CourseSections");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Department", b =>
+                {
+                    b.Property<string>("DepartmentID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Building")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("DeanID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DepartmentName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("EstablishedYear")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("DepartmentID");
+
+                    b.HasIndex("DeanID");
+
+                    b.HasIndex("DepartmentName")
+                        .IsUnique();
+
+                    b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Enrollment", b =>
+                {
+                    b.Property<string>("EnrollmentID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("AttendanceRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SectionID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("EnrollmentID");
+
+                    b.HasIndex("SectionID");
+
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("Enrollments");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Grade", b =>
+                {
+                    b.Property<string>("GradeID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<decimal?>("AttendanceScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnrollmentID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("FinalScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<decimal>("GradePoint")
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<string>("LetterGrade")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
+
+                    b.Property<decimal?>("MidtermScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<int>("Semester")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SubjectID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("TotalScore")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GradeID");
+
+                    b.HasIndex("EnrollmentID")
+                        .IsUnique();
+
+                    b.HasIndex("StudentID");
+
+                    b.HasIndex("SubjectID");
+
+                    b.ToTable("Grades");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.GradeHistory", b =>
+                {
+                    b.Property<string>("HistoryID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Component")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("GradeID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ModifiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("NewValue")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<decimal>("OldValue")
+                        .HasColumnType("decimal(4,2)");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("HistoryID");
+
+                    b.HasIndex("GradeID");
+
+                    b.ToTable("GradeHistories");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Major", b =>
+                {
+                    b.Property<string>("MajorID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Degree")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("DepartmentID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("DurationYears")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MajorCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("MajorName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("TotalCredits")
+                        .HasColumnType("int");
+
+                    b.HasKey("MajorID");
+
+                    b.HasIndex("DepartmentID");
+
+                    b.HasIndex("MajorCode")
+                        .IsUnique();
+
+                    b.ToTable("Majors");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Person", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AccountID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdCard")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PersonType")
+                        .IsRequired()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("AccountID")
+                        .IsUnique()
+                        .HasFilter("[AccountID] IS NOT NULL");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Persons");
+
+                    b.HasDiscriminator<string>("PersonType").HasValue("Person");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Subject", b =>
+                {
+                    b.Property<string>("SubjectID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Credits")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DepartmentID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PracticeHours")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Prerequisites")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubjectCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("SubjectName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("SubjectType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("TheoryHours")
+                        .HasColumnType("int");
+
+                    b.HasKey("SubjectID");
+
+                    b.HasIndex("DepartmentID");
+
+                    b.HasIndex("SubjectCode")
+                        .IsUnique();
+
+                    b.ToTable("Subjects");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Admin", b =>
+                {
+                    b.HasBaseType("StudentManagement.Core.Entities.Person");
+
+                    b.Property<string>("AdminCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Department")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasIndex("AdminCode")
+                        .IsUnique()
+                        .HasFilter("[AdminCode] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("Admin");
                 });
 
             modelBuilder.Entity("StudentManagement.Core.Entities.Student", b =>
                 {
-                    b.HasOne("StudentManagement.Core.Entities.User", "User")
-                        .WithOne()
-                        .HasForeignKey("StudentManagement.Core.Entities.Student", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasBaseType("StudentManagement.Core.Entities.Person");
 
-                    b.Navigation("User");
+                    b.Property<string>("AcademicYear")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Avatar")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ClassID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("DebtAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EnrollmentYear")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("GPA")
+                        .HasPrecision(3, 2)
+                        .HasColumnType("decimal(3,2)");
+
+                    b.Property<string>("MajorID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ScholarshipTier")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("TotalCredits")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Tuition")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasIndex("ClassID");
+
+                    b.HasIndex("MajorID");
+
+                    b.HasIndex("StudentCode")
+                        .IsUnique()
+                        .HasFilter("[StudentCode] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("Student");
                 });
 
             modelBuilder.Entity("StudentManagement.Core.Entities.Teacher", b =>
                 {
-                    b.HasOne("StudentManagement.Core.Entities.User", "User")
-                        .WithOne()
-                        .HasForeignKey("StudentManagement.Core.Entities.Teacher", "UserId")
+                    b.HasBaseType("StudentManagement.Core.Entities.Person");
+
+                    b.Property<string>("ConsultingHours")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Degree")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("DepartmentID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("EmploymentType")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OfficeRoom")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ResearchArea")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("TeacherCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasIndex("DepartmentID");
+
+                    b.HasIndex("TeacherCode")
+                        .IsUnique()
+                        .HasFilter("[TeacherCode] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue("Teacher");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Class", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Teacher", "Advisor")
+                        .WithMany()
+                        .HasForeignKey("AdvisorID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("StudentManagement.Core.Entities.Major", "Major")
+                        .WithMany("Classes")
+                        .HasForeignKey("MajorID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Advisor");
+
+                    b.Navigation("Major");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.CourseSection", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Core.Entities.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Department", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Teacher", "Dean")
+                        .WithMany()
+                        .HasForeignKey("DeanID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Dean");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Enrollment", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.CourseSection", "Section")
+                        .WithMany("Enrollments")
+                        .HasForeignKey("SectionID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Core.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Section");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Grade", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Enrollment", "Enrollment")
+                        .WithOne("Grade")
+                        .HasForeignKey("StudentManagement.Core.Entities.Grade", "EnrollmentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.HasOne("StudentManagement.Core.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Core.Entities.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Enrollment");
+
+                    b.Navigation("Student");
+
+                    b.Navigation("Subject");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.GradeHistory", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Grade", "Grade")
+                        .WithMany("GradeHistories")
+                        .HasForeignKey("GradeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Major", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Department", "Department")
+                        .WithMany("Majors")
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Person", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Account", "Account")
+                        .WithOne("Person")
+                        .HasForeignKey("StudentManagement.Core.Entities.Person", "AccountID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Subject", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Department", "Department")
+                        .WithMany("Subjects")
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Student", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Class", "Class")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("StudentManagement.Core.Entities.Major", null)
+                        .WithMany("Students")
+                        .HasForeignKey("MajorID");
+
+                    b.Navigation("Class");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Teacher", b =>
+                {
+                    b.HasOne("StudentManagement.Core.Entities.Department", "Department")
+                        .WithMany("Teachers")
+                        .HasForeignKey("DepartmentID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Account", b =>
+                {
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Class", b =>
+                {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.CourseSection", b =>
+                {
+                    b.Navigation("Enrollments");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Department", b =>
+                {
+                    b.Navigation("Majors");
+
+                    b.Navigation("Subjects");
+
+                    b.Navigation("Teachers");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Enrollment", b =>
+                {
+                    b.Navigation("Grade");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Grade", b =>
+                {
+                    b.Navigation("GradeHistories");
+                });
+
+            modelBuilder.Entity("StudentManagement.Core.Entities.Major", b =>
+                {
+                    b.Navigation("Classes");
+
+                    b.Navigation("Students");
                 });
 #pragma warning restore 612, 618
         }
