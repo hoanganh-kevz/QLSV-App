@@ -1,0 +1,63 @@
+{
+  "college": {
+    "id": "CELG",
+    "name": "Trường Kinh tế, Luật và Quản lý nhà nước UEH",
+    "departments": [
+      {
+        "id": "CELG_D1",
+        "name": "Khoa Kinh tế",
+        "units": [
+          {"id": "ECO_01", "name": "Kinh tế học"},
+          {"id": "ECO_02", "name": "Kinh tế đầu tư"},
+          {"id": "ECO_03", "name": "Kinh tế phát triển"},
+          {"id": "ECO_04", "name": "Thẩm định giá và Quản trị tài sản"},
+          {"id": "ECO_05", "name": "Bất động sản"},
+          {"id": "ECO_06", "name": "Kinh doanh nông nghiệp"}
+        ]
+      },
+      {
+        "id": "CELG_D2",
+        "name": "Khoa Tài chính công",
+        "units": [
+          {"id": "PUB_01", "name": "Tài chính công"},
+          {"id": "PUB_02", "name": "Thuế"},
+          {"id": "PUB_03", "name": "Quản trị Hải quan - Ngoại thương"}
+        ]
+      },
+      {
+        "id": "CELG_D3",
+        "name": "Khoa Luật",
+        "units": [
+          {"id": "LAW_01", "name": "Luật Kinh tế"},
+          {"id": "LAW_02", "name": "Luật Kinh doanh quốc tế"},
+          {"id": "LAW_03", "name": "Luật Dân sự"}
+        ]
+      },
+      {
+        "id": "CELG_D4",
+        "name": "Khoa Quản lý nhà nước",
+        "units": [
+          {"id": "GOV_01", "name": "Quản lý công"},
+          {"id": "GOV_02", "name": "Chính sách công"}
+        ]
+      },
+      {
+        "id": "CELG_D5",
+        "name": "Khoa Toán - Thống kê",
+        "units": [
+          {"id": "MAT_01", "name": "Toán tài chính"},
+          {"id": "MAT_02", "name": "Thống kê kinh doanh"},
+          {"id": "MAT_03", "name": "Phân tích rủi ro và định phí bảo hiểm"},
+          {"id": "MAT_04", "name": "Toán kinh tế"}
+        ]
+      },
+      {
+        "id": "CELG_D6",
+        "name": "Khoa Ngoại ngữ",
+        "units": [
+          {"id": "ENG_01", "name": "Tiếng Anh thương mại"}
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mC:/Users/ADMIN/OneDrive/M├íy t├¡nh/CNPM_CUOI_KY/frontEnd[39m
+
+ [32mΓ£ô[39m src/hooks/usePermissions.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32mΓ£ô[39m src/services/api.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/context/AuthContext.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32mΓ£ô[39m src/hooks/useStudents.test.js [2m([22m[2m4 tests[22m[2m)[22m[32m 123[2mms[22m[39m
+ [32mΓ£ô[39m src/components/common/DataTable/DataTable.test.jsx [2m([22m[2m2 tests[22m[2m)[22m[33m 877[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should render table with data [33m 721[2mms[22m[39m
+ [31mΓ¥»[39m src/pages/Login/LoginPage.test.jsx [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 2277[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should render login form elements [33m 900[2mms[22m[39m
+[31m     [31m├ù[31m should display validation errors when submitting empty form[39m[33m 1375[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Students/StudentsPage.test.jsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2385[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should render page title and buttons [33m 1320[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should load and display students in the table [33m 558[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should display empty message when no students found [33m 505[2mms[22m[39m
+ [31mΓ¥»[39m src/pages/Students/components/AddStudentModal.test.jsx [2m([22m[2m2 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 4637[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m should show validation errors for empty required fields [33m 2174[2mms[22m[39m
+[31m     [31m├ù[31m should call onSubmit with form data when valid[39m[33m 2460[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m6 passed[39m[22m[90m (8)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m23 passed[39m[22m[90m (25)[39m
+[2m   Start at [22m 18:48:10
+[2m   Duration [22m 10.48s[2m (transform 961ms, setup 1.14s, import 16.83s, tests 10.39s, environment 9.68s)[22m
+
