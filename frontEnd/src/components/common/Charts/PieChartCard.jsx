@@ -23,7 +23,7 @@ const PieChartCard = ({ title, data, loading }) => {
             style={{ height: '100%', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)' }}
         >
             <div style={{ width: '100%', height: 300 }}>
-                <ResponsiveContainer>
+                <ResponsiveContainer width="100%" height="100%" minHeight={300} minWidth={0}>
                     <PieChart>
                         <Pie
                             data={translatedData}

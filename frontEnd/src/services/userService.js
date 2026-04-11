@@ -45,7 +45,8 @@ export const userService = {
             const response = await api.delete(`/admin/users/${userId}`);
             return { success: true, data: response.data };
         } catch (error) {
-            return { success: false, message: 'Failed to delete user' };
+            console.error('Delete user error:', error.response?.data || error);
+            return { success: false, message: error.response?.data?.message || 'Failed to delete user' };
         }
     }
 };

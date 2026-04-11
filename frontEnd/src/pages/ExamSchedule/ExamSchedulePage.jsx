@@ -46,7 +46,7 @@ const ExamSchedulePage = () => {
       dataIndex: ['classSection', 'subject', 'name'],
       key: 'subjectName',
       render: (text, record) => (
-        <Space direction="vertical" size={0}>
+        <Space orientation="vertical" size={0}>
           <Text strong>{text}</Text>
           <Text type="secondary" style={{ fontSize: '12px' }}>{record.classSection?.subject?.code}</Text>
         </Space>

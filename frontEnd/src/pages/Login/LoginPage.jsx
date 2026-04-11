@@ -287,7 +287,7 @@ const LoginPage = () => {
 
                     {errorMsg && (
                         <div className="animate-fade-in-up">
-                            <Alert message={errorMsg} type="error" showIcon style={{ marginBottom: 24, borderRadius: 12, border: 'none', background: '#fef2f2', color: '#991b1b' }} />
+                            <Alert title={errorMsg} type="error" showIcon style={{ marginBottom: 24, borderRadius: 12, border: 'none', background: '#fef2f2', color: '#991b1b' }} />
                         </div>
                     )}
 
@@ -392,7 +392,7 @@ const LoginPage = () => {
                                 loading={loading}
                                 className="premium-btn"
                                 icon={!loading && <ArrowRightOutlined />}
-                                iconPosition="end"
+                                iconPlacement="end"
                                 style={{ marginTop: isLoginMode ? 12 : 0 }}
                             >
                                 {isLoginMode ? t('auth.signIn') : t('auth.signUp')}

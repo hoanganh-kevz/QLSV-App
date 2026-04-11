@@ -6,7 +6,7 @@ const classSectionSchema = new mongoose.Schema({
         required: [true, 'Class section code is required'],
         unique: true,
         trim: true,
-        uppercase: true // e.g., INF509012_SE01
+        uppercase: true // e.g., 26D2INF50901005
     },
     subject: {
         type: mongoose.Schema.Types.ObjectId,

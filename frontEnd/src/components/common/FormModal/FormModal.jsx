@@ -28,8 +28,8 @@ const FormModal = ({
             confirmLoading={loading}
             okText={okText || t('common.save') || "Save"}
             cancelText={cancelText || t('common.cancel') || "Cancel"}
-            destroyOnClose
-            maskClosable={!loading}
+            destroyOnHidden
+            mask={{ closable: !loading }}
             keyboard={!loading}
             styles={{ body: { paddingTop: '20px' } }}
         >

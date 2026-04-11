@@ -110,18 +110,47 @@ const TeacherEvaluationPage = () => {
                         ) : classes.length === 0 ? (
                             <Empty description="Bạn chưa được phân bổ vào lớp học phần nào trong học kỳ này" />
                         ) : (
-                            <List
-                                itemLayout="horizontal"
-                                dataSource={classes}
-                                renderItem={(item) => {
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                {classes.map((item) => {
                                     const statusCfg = getStatusConfig(item.status);
                                     const canEvaluate = (item.status === 'Completed' || item.status === 'Active') && !item.isEvaluated;
                                     
                                     return (
-                                        <List.Item
+                                        <div
+                                            key={item._id}
                                             className={item.isEvaluated ? 'evaluated-item' : ''}
-                                            actions={[
-                                                item.isEvaluated ? (
+                                            style={{ 
+                                                display: 'flex', 
+                                                justifyContent: 'space-between', 
+                                                alignItems: 'center', 
+                                                padding: '16px', 
+                                                borderBottom: '1px solid var(--border-color)',
+                                                gap: '16px'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 1 }}>
+                                                <Badge dot={canEvaluate} offset={[-2, 38]} status="processing">
+                                                    <Avatar size={48} icon={<UserOutlined />} style={{ backgroundColor: 'var(--primary-color)' }} />
+                                                </Badge>
+                                                <div>
+                                                    <div style={{ marginBottom: '4px' }}>
+                                                        <Space>
+                                                            <Text strong style={{ fontSize: '16px' }}>{item.subject?.name}</Text>
+                                                            <Tag color={statusCfg.color} style={{ fontSize: '10px', borderRadius: 4 }}>{statusCfg.text}</Tag>
+                                                        </Space>
+                                                    </div>
+                                                    <Space orientation="vertical" size={0}>
+                                                        <Text type="secondary">Giảng viên: <Text strong>{item.teacher?.fullName || 'Chưa phân công'}</Text></Text>
+                                                        <Space separator={<Text type="secondary" style={{ fontSize: '10px' }}>|</Text>}>
+                                                            <Text type="secondary" style={{ fontSize: '12px' }}>Mã lớp: {item.code}</Text>
+                                                            <Text type="secondary" style={{ fontSize: '12px' }}><ClockCircleOutlined /> Tiết {item.schedule?.[0]?.startPeriod}-{item.schedule?.[0]?.endPeriod}</Text>
+                                                        </Space>
+                                                    </Space>
+                                                </div>
+                                            </div>
+                                            
+                                            <div>
+                                                {item.isEvaluated ? (
                                                     <Tag color="success" icon={<CheckCircleOutlined />} style={{ borderRadius: 6, padding: '4px 12px' }}>Đã đánh giá</Tag>
                                                 ) : (item.status === 'Completed' || item.status === 'Active') ? (
                                                     <Button 
@@ -145,35 +174,12 @@ const TeacherEvaluationPage = () => {
                                                             Chưa khả dụng
                                                         </Button>
                                                     </Tooltip>
-                                                )
-                                            ]}
-                                        >
-                                            <List.Item.Meta
-                                                avatar={
-                                                    <Badge dot={canEvaluate} offset={[-2, 38]} status="processing">
-                                                        <Avatar size={48} icon={<UserOutlined />} style={{ backgroundColor: 'var(--primary-color)' }} />
-                                                    </Badge>
-                                                }
-                                                title={
-                                                    <Space>
-                                                        <Text strong style={{ fontSize: '16px' }}>{item.subject?.name}</Text>
-                                                        <Tag color={statusCfg.color} style={{ fontSize: '10px', borderRadius: 4 }}>{statusCfg.text}</Tag>
-                                                    </Space>
-                                                }
-                                                description={
-                                                    <Space direction="vertical" size={0}>
-                                                        <Text type="secondary">Giảng viên: <Text strong>{item.teacher?.fullName || 'Chưa phân công'}</Text></Text>
-                                                        <Space split={<Text type="secondary" style={{ fontSize: '10px' }}>|</Text>}>
-                                                            <Text type="secondary" style={{ fontSize: '12px' }}>Mã lớp: {item.code}</Text>
-                                                            <Text type="secondary" style={{ fontSize: '12px' }}><ClockCircleOutlined /> Tiết {item.schedule?.[0]?.startPeriod}-{item.schedule?.[0]?.endPeriod}</Text>
-                                                        </Space>
-                                                    </Space>
-                                                }
-                                            />
-                                        </List.Item>
+                                                )}
+                                            </div>
+                                        </div>
                                     );
-                                }}
-                            />
+                                })}
+                            </div>
                         )}
                     </Card>
                 </div>
@@ -198,7 +204,7 @@ const TeacherEvaluationPage = () => {
                                 dataIndex: ['classSection', 'subject', 'name'], 
                                 key: 'subject',
                                 render: (name, record) => (
-                                    <Space direction="vertical" size={0}>
+                                    <Space orientation="vertical" size={0}>
                                         <Text strong>{name}</Text>
                                         <Text type="secondary" style={{ fontSize: '11px' }}>Mã: {record.classSection?.code}</Text>
                                     </Space>
@@ -256,7 +262,7 @@ const TeacherEvaluationPage = () => {
                                                 <div>Công bằng: {r.fairness || 0}/5</div>
                                             </div>
                                         }>
-                                            <Space direction="vertical" size={0}>
+                                            <Space orientation="vertical" size={0}>
                                                 <Rate disabled defaultValue={avg} allowHalf style={{ fontSize: '14px' }} />
                                                 <Text type="secondary" style={{ fontSize: '11px' }}>Trung bình: {avg.toFixed(1)}/5.0</Text>
                                             </Space>

@@ -12,12 +12,10 @@ const AdvancedFilterPanel = ({ onReset, children, ...props }) => {
             bordered={false}
             style={{ marginBottom: 24, borderRadius: '16px', background: 'var(--card-bg)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
             expandIcon={({ isActive }) => <FilterOutlined rotate={isActive ? 90 : 0} style={{ color: '#1890ff' }} />}
-            {...props}
-        >
-            <Panel
-                header={<span style={{ fontWeight: 600, color: 'var(--text-color)' }}>{t('common.advancedFilters')}</span>}
-                key="1"
-                extra={
+            items={[{
+                key: '1',
+                label: <span style={{ fontWeight: 600, color: 'var(--text-color)' }}>{t('common.advancedFilters')}</span>,
+                extra: (
                     <Button
                         type="link"
                         size="small"
@@ -29,13 +27,11 @@ const AdvancedFilterPanel = ({ onReset, children, ...props }) => {
                     >
                         {t('common.resetAll')}
                     </Button>
-                }
-            >
-                <div style={{ padding: '8px 0' }}>
-                    {children}
-                </div>
-            </Panel>
-        </Collapse>
+                ),
+                children: <div style={{ padding: '8px 0' }}>{children}</div>
+            }]}
+            {...props}
+        />
     );
 };
 

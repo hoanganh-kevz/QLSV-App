@@ -460,7 +460,7 @@ const GradeEntryPage = () => {
                 <Form layout="vertical" form={configForm} initialValues={{ latePenalty: 0 }}>
                     <Form.Item name="latePenalty" label="Hình thức xử lý khi sinh viên Đi trễ:">
                         <Radio.Group style={{ width: '100%' }}>
-                            <Space direction="vertical" style={{ width: '100%' }}>
+                            <Space orientation="vertical" style={{ width: '100%' }}>
                                 <Radio.Button value={0} style={{ width: '100%', textAlign: 'left' }}>🟢 Tính như Có mặt (Không trừ điểm chuyên cần)</Radio.Button>
                                 <Radio.Button value={0.5} style={{ width: '100%', textAlign: 'left' }}>🟡 Coi như Nửa buổi vắng (Trừ 0.5 buổi điểm danh)</Radio.Button>
                                 <Radio.Button value={1} style={{ width: '100%', textAlign: 'left' }}>🔴 Coi như Vắng học (Trừ 1 buổi điểm danh)</Radio.Button>

@@ -85,7 +85,7 @@ const CourseRegistrationPage = () => {
       dataIndex: ['subject', 'name'],
       key: 'subjectName',
       render: (text, record) => (
-        <Space direction="vertical" size={0}>
+        <Space orientation="vertical" size={0}>
           <Text strong>{text}</Text>
           <Text type="secondary" style={{ fontSize: '12px' }}>{record.subject?.code}</Text>
         </Space>

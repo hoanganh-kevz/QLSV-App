@@ -79,7 +79,7 @@ const UsersPage = () => {
             showConfirmDialog({
                 title: t('users.upgradeAdminTitle') || 'Nâng cấp Quản trị viên',
                 content: t('users.upgradeAdminConfirm')?.replace('{{name}}', record.name || record.username) || `Bạn có chắc chắn muốn nâng cấp ${record.name || record.username} thành Quản trị viên? Quyền hạn này rất lớn và có thể ảnh hưởng đến hệ thống.`,
-                onOk: async () => {
+                onConfirm: async () => {
                     await executeRoleChange(userId, newRole);
                 }
             });
@@ -114,7 +114,7 @@ const UsersPage = () => {
         showConfirmDialog({
             title: actionWord,
             content: confirmContent.replace('{{name}}', record.name || record.username),
-            onOk: async () => {
+            onConfirm: async () => {
                 const previousUsers = [...users];
                 const expectedNewStatus = record.status === 'Active' ? 'Inactive' : 'Active';
                 setUsers(users.map(u => u._id === record._id ? { ...u, status: expectedNewStatus } : u));
@@ -138,7 +138,7 @@ const UsersPage = () => {
         showConfirmDialog({
             title: t('users.deleteTitle'),
             content: t('users.deleteConfirm').replace('{{name}}', record.name || record.username),
-            onOk: async () => {
+            onConfirm: async () => {
                 const res = await userService.deleteUser(record._id);
                 if (res.success) {
                     showSuccess(t('users.deleteSuccess'));
@@ -186,7 +186,7 @@ const UsersPage = () => {
             render: (_, record) => (
                 <Space>
                     <Avatar 
-                        src={record.avatar} 
+                        src={record.avatar || undefined} 
                         icon={<UserOutlined />} 
                         style={{ backgroundColor: record.role === 'admin' ? '#005A51' : '#10b981', border: '2px solid rgba(255,255,255,0.2)' }} 
                         size="large"
@@ -235,7 +235,7 @@ const UsersPage = () => {
             key: 'assignments',
             render: (_, record) => (
                 record.role === 'teacher' ? (
-                    <Space direction="vertical" size={4} style={{ width: '100%' }}>
+                    <Space orientation="vertical" size={4} style={{ width: '100%' }}>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                             {(record.assignedClasses || []).map(c => <Tag color="blue" key={c} style={{ borderRadius: '4px' }}>{c}</Tag>)}
                             {(record.assignedClasses || []).length === 0 && <Text type="secondary" style={{ fontSize: '12px' }}>{t('users.none')}</Text>}
@@ -293,22 +293,22 @@ const UsersPage = () => {
             <Row gutter={[24, 24]} style={{ marginBottom: 24 }}>
                 <Col xs={24} sm={6}>
                     <Card className="glass-panel" variant="borderless">
-                        <Statistic title={t('users.stats.total')} value={stats.total} prefix={<TeamOutlined />} valueStyle={{ color: 'var(--primary-color)', fontWeight: 800 }} />
+                        <Statistic title={t('users.stats.total')} value={stats.total} prefix={<TeamOutlined />} styles={{ content: { color: 'var(--primary-color)', fontWeight: 800 } }} />
                     </Card>
                 </Col>
                 <Col xs={24} sm={6}>
                     <Card className="glass-panel" variant="borderless">
-                        <Statistic title={t('users.stats.admins')} value={stats.admins} prefix={<SafetyOutlined />} valueStyle={{ color: '#005A51', fontWeight: 800 }} />
+                        <Statistic title={t('users.stats.admins')} value={stats.admins} prefix={<SafetyOutlined />} styles={{ content: { color: '#005A51', fontWeight: 800 } }} />
                     </Card>
                 </Col>
                 <Col xs={24} sm={6}>
                     <Card className="glass-panel" variant="borderless">
-                        <Statistic title={t('users.stats.teachers')} value={stats.teachers} prefix={<SolutionOutlined />} valueStyle={{ color: '#10b981', fontWeight: 800 }} />
+                        <Statistic title={t('users.stats.teachers')} value={stats.teachers} prefix={<SolutionOutlined />} styles={{ content: { color: '#10b981', fontWeight: 800 } }} />
                     </Card>
                 </Col>
                 <Col xs={24} sm={6}>
                     <Card className="glass-panel" variant="borderless">
-                        <Statistic title={t('users.stats.students')} value={stats.students} prefix={<UserAddOutlined />} valueStyle={{ color: '#3b82f6', fontWeight: 800 }} />
+                        <Statistic title={t('users.stats.students')} value={stats.students} prefix={<UserAddOutlined />} styles={{ content: { color: '#3b82f6', fontWeight: 800 } }} />
                     </Card>
                 </Col>
             </Row>
@@ -347,7 +347,7 @@ const UsersPage = () => {
                 onOk={handleSaveAssignments}
                 onCancel={() => setIsAssignModalVisible(false)}
                 confirmLoading={assignLoading}
-                destroyOnClose
+                destroyOnHidden
                 centered
                 className="premium-modal"
             >

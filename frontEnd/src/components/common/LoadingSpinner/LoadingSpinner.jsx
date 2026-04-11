@@ -19,14 +19,14 @@ const LoadingSpinner = ({ fullScreen = false, tip = "Loading..." }) => {
                 display: 'flex', justifyContent: 'center', alignItems: 'center',
                 zIndex: 9999
             }}>
-                <Spin indicator={antIcon} tip={tip} size="large" />
+                <Spin indicator={antIcon} description={tip} size="large" />
             </div>
         );
     }
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
-            <Spin indicator={antIcon} tip={tip} />
+            <Spin indicator={antIcon} description={tip} />
         </div>
     );
 };

@@ -90,7 +90,7 @@ const seedData = async () => {
     // 5. Create Class Sections for the Default Term
     const sectionData = [
       { 
-        code: activeTerm.code + '_IT001_01', 
+        code: '26D2IT00101', 
         subject: subjects[0]._id, 
         term: activeTerm._id, 
         teacher: teachers[0]._id, 
@@ -98,7 +98,7 @@ const seedData = async () => {
         schedule: [{ dayOfWeek: 2, startPeriod: 1, endPeriod: 3, room: 'A.101' }] 
       },
       { 
-        code: activeTerm.code + '_IT002_01', 
+        code: '26D2IT00201', 
         subject: subjects[1]._id, 
         term: activeTerm._id, 
         teacher: teachers[0]._id, 
@@ -106,7 +106,7 @@ const seedData = async () => {
         schedule: [{ dayOfWeek: 3, startPeriod: 4, endPeriod: 6, room: 'B.202' }] 
       },
       { 
-        code: activeTerm.code + '_MA001_01', 
+        code: '26D2MA00101', 
         subject: subjects[2]._id, 
         term: activeTerm._id, 
         teacher: teachers[1]._id, 

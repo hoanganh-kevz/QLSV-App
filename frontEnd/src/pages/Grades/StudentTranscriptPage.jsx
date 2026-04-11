@@ -142,7 +142,7 @@ const StudentTranscriptPage = () => {
  
             {/* Student Selector - Hidden for Students */}
             {!isStudent && (
-                <Card bordered={false} style={{ marginBottom: 24, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+                <Card variant="borderless" style={{ marginBottom: 24, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
                     <Row gutter={16} align="middle">
                         <Col xs={24} md={12}>
                             <Text strong style={{ display: 'block', marginBottom: 4, fontSize: 12, color: '#666' }}>{t('common.selectStudent').toUpperCase()}</Text>
@@ -164,9 +164,9 @@ const StudentTranscriptPage = () => {
                         {studentInfo && (
                             <Col xs={24} md={12}>
                                 <div style={{ display: 'flex', gap: 32, paddingTop: 20, alignItems: 'center' }}>
-                                    <Statistic title="GPA (4.0)" value={totalGPA} prefix={<TrophyOutlined />} valueStyle={{ color: totalGPA >= 3.0 ? '#52c41a' : totalGPA >= 2.0 ? '#faad14' : '#f5222d' }} />
+                                    <Statistic title="GPA (4.0)" value={totalGPA} prefix={<TrophyOutlined />} styles={{ content: { color: totalGPA >= 3.0 ? '#52c41a' : totalGPA >= 2.0 ? '#faad14' : '#f5222d' } }} />
                                     <Statistic title={t('grades.subjects')} value={totalSubjects} prefix={<BookOutlined />} />
-                                    <Statistic title={t('grades.passed')} value={passedSubjects} prefix={<BarChartOutlined />} valueStyle={{ color: '#52c41a' }} />
+                                    <Statistic title={t('grades.passed')} value={passedSubjects} prefix={<BarChartOutlined />} styles={{ content: { color: '#52c41a' } }} />
                                     <Button type="default" icon={<PrinterOutlined />} onClick={handleExportPDF} loading={exportLoading} style={{ marginLeft: 'auto', borderColor: '#722ed1', color: '#722ed1' }}>
                                         {t('common.exportPDF')}
                                     </Button>
@@ -179,11 +179,11 @@ const StudentTranscriptPage = () => {
 
             {/* Global Stats Summary for Students (Since selector is hidden) */}
             {isStudent && grades.length > 0 && (
-                <Card bordered={false} style={{ marginBottom: 24, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+                <Card variant="borderless" style={{ marginBottom: 24, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
                     <div style={{ display: 'flex', gap: 32, alignItems: 'center', justifyContent: 'space-around' }}>
-                        <Statistic title="GPA (4.0)" value={totalGPA} prefix={<TrophyOutlined />} valueStyle={{ color: totalGPA >= 3.0 ? '#52c41a' : totalGPA >= 2.0 ? '#faad14' : '#f5222d' }} />
+                        <Statistic title="GPA (4.0)" value={totalGPA} prefix={<TrophyOutlined />} styles={{ content: { color: totalGPA >= 3.0 ? '#52c41a' : totalGPA >= 2.0 ? '#faad14' : '#f5222d' } }} />
                         <Statistic title={t('grades.subjects')} value={totalSubjects} prefix={<BookOutlined />} />
-                        <Statistic title={t('grades.passed')} value={passedSubjects} prefix={<BarChartOutlined />} valueStyle={{ color: '#52c41a' }} />
+                        <Statistic title={t('grades.passed')} value={passedSubjects} prefix={<BarChartOutlined />} styles={{ content: { color: '#52c41a' } }} />
                         <Button type="primary" icon={<PrinterOutlined />} onClick={handleExportPDF} loading={exportLoading} className="premium-btn">
                             {t('common.exportPDF')}
                         </Button>
@@ -194,11 +194,11 @@ const StudentTranscriptPage = () => {
             {/* Transcript by Semester */}
             {selectedStudent ? (
                 loading ? (
-                    <Card bordered={false} style={{ borderRadius: '16px', textAlign: 'center', padding: 40 }}>
-                        <Spin tip={t('common.loading')} />
+                    <Card variant="borderless" style={{ borderRadius: '16px', textAlign: 'center', padding: 40 }}>
+                        <Spin description={t('common.loading')} />
                     </Card>
                 ) : evalRequired ? (
-                    <Card bordered={false} className="glass-panel" style={{ borderRadius: '16px', textAlign: 'center', padding: '60px 40px', border: '1px solid #ffccc7', background: '#fff2f0' }}>
+                    <Card variant="borderless" className="glass-panel" style={{ borderRadius: '16px', textAlign: 'center', padding: '60px 40px', border: '1px solid #ffccc7', background: '#fff2f0' }}>
                         <div style={{ fontSize: 64, marginBottom: 24 }}>🔒</div>
                         <Title level={3} style={{ color: '#cf1322' }}>{evalRequired.message}</Title>
                         <Paragraph type="secondary" style={{ fontSize: 16, maxWidth: 600, margin: '0 auto 24px' }}>
@@ -228,7 +228,7 @@ const StudentTranscriptPage = () => {
                     </Card>
                 ) : grades.length > 0 ? (
                     Object.entries(groupedBySemester).sort(([a], [b]) => b.localeCompare(a)).map(([semester, semGrades]) => (
-                        <Card key={semester} bordered={false} style={{ marginBottom: 16, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+                        <Card key={semester} variant="borderless" style={{ marginBottom: 16, borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
                             <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Text strong style={{ fontSize: 16 }}>📅 {semester}</Text>
                                 <Tag color="purple">GPA (4.0): {calculateGPA(semGrades)}</Tag>
@@ -237,12 +237,12 @@ const StudentTranscriptPage = () => {
                         </Card>
                     ))
                 ) : (
-                    <Card bordered={false} style={{ borderRadius: '16px', textAlign: 'center', padding: 40 }}>
+                    <Card variant="borderless" style={{ borderRadius: '16px', textAlign: 'center', padding: 40 }}>
                         <Empty description={t('grades.noGrades')} />
                     </Card>
                 )
             ) : (
-                <Card bordered={false} style={{ borderRadius: '16px', textAlign: 'center', padding: 60 }}>
+                <Card variant="borderless" style={{ borderRadius: '16px', textAlign: 'center', padding: 60 }}>
                     <div style={{ fontSize: 48, marginBottom: 16 }}>🎓</div>
                     <Title level={4} style={{ color: '#999' }}>{t('common.selectStudent')}</Title>
                     <Text type="secondary">{t('grades.selectStudent')}</Text>

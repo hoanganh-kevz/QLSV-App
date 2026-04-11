@@ -7,21 +7,21 @@ const StatCard = ({ title, value, prefix, suffix, precision = 0, valueStyle, loa
     const { t } = useTranslation();
     if (loading) {
         return (
-            <Card className="stat-card glass-panel" bordered={false}>
+            <Card className="stat-card glass-panel" variant="borderless">
                 <Skeleton active paragraph={{ rows: 1 }} />
             </Card>
         );
     }
 
     return (
-        <Card className="stat-card glass-panel" bordered={false}>
+        <Card className="stat-card glass-panel" variant="borderless">
             <div className="stat-card-content">
                 <div className="stat-card-info">
                     <Statistic
                         title={<span className="stat-card-title">{title}</span>}
                         value={value}
                         precision={precision}
-                        valueStyle={{ ...valueStyle, fontSize: '28px', fontWeight: '800' }}
+                        styles={{ content: { ...valueStyle, fontSize: '28px', fontWeight: '800' } }}
                         prefix={prefix}
                         suffix={suffix}
                     />

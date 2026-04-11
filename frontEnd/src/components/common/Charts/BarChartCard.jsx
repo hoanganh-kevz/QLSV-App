@@ -8,12 +8,12 @@ const BarChartCard = ({ title, data, dataKeyX, dataKeyY, barColor = '#1890ff', l
     return (
         <Card
             title={title}
-            bordered={false}
+            variant="borderless"
             loading={loading}
             style={{ height: '100%', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)' }}
         >
             <div style={{ width: '100%', height: 300 }}>
-                <ResponsiveContainer>
+                <ResponsiveContainer width="100%" height={300}>
                     <BarChart
                         data={data}
                         margin={{ top: 20, right: 30, left: 20, bottom: 5 }}

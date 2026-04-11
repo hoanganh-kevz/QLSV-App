@@ -116,7 +116,7 @@ const ForgotPasswordPage = () => {
                         </>
                     )}
 
-                    {errorMsg && <Alert message={errorMsg} type="error" showIcon style={{ marginBottom: 20 }} />}
+                    {errorMsg && <Alert title={errorMsg} type="error" showIcon style={{ marginBottom: 20 }} />}
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {/* Always keep email in DOM but hide it in steps 2 and 3 */}
@@ -138,7 +138,7 @@ const ForgotPasswordPage = () => {
                                 />
                                 {errors.email && <Text type="danger">{errors.email.message}</Text>}
                             </div>
-                            <Button type="primary" htmlType="submit" block loading={loading} className="premium-btn" icon={<ArrowRightOutlined />} iconPosition="end">Tiếp tục</Button>
+                            <Button type="primary" htmlType="submit" block loading={loading} className="premium-btn" icon={<ArrowRightOutlined />} iconPlacement="end">Tiếp tục</Button>
                         </div>
 
                         {currentStep === 1 && (

@@ -24,7 +24,7 @@ const { Title, Text } = Typography;
 const { Option } = Select;
 
 const createSchema = () => yup.object().shape({
-    code: yup.string().required('Mã lớp học phần là bắt buộc').matches(/^[A-Z0-9_]+$/, 'Mã không chứa khoảng trắng (VD: INF509012_SE01)'),
+    code: yup.string().required('Mã lớp học phần là bắt buộc').matches(/^[A-Z0-9_-]+$/, 'Mã không chứa khoảng trắng (VD: 26D2INF50901005)'),
     subject: yup.string().required('Môn học là bắt buộc'),
     term: yup.string().required('Học kỳ là bắt buộc'),
     teacher: yup.string().nullable(),
@@ -120,7 +120,7 @@ const SectionFormModal = ({ open, initialData, onCancel, onSubmit, subjects, ter
                 <Row gutter={24}>
                     <Col xs={24} md={12}>
                         <Form.Item label="Mã Lớp HP" required validateStatus={errors.code ? 'error' : ''} help={<ErrorMessage error={errors.code?.message} />}>
-                            <Controller name="code" control={control} render={({ field }) => <Input {...field} placeholder="VD: INF50901_SE01" style={{ textTransform: 'uppercase' }} disabled={isEdit} />} />
+                            <Controller name="code" control={control} render={({ field }) => <Input {...field} placeholder="VD: 26D2INF50901005" style={{ textTransform: 'uppercase' }} disabled={isEdit} />} />
                         </Form.Item>
                     </Col>
                     <Col xs={24} md={12}>
@@ -365,7 +365,7 @@ const ClassSectionsPage = () => {
             title: 'Mã Lớp HP',
             dataIndex: 'code',
             key: 'code',
-            width: 140,
+            width: 180,
             sorter: (a, b) => (a.code || '').localeCompare(b.code || ''),
             render: (text) => <Text strong style={{ color: 'var(--primary-color)' }}>{text}</Text>
         },

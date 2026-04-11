@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Card, Button, List, Tag, Modal, Form, Input, Select, Space, message, Spin, Empty, Badge } from 'antd';
+import { Typography, Card, Button, Tag, Modal, Form, Input, Select, Space, message, Spin, Empty, Badge, Row, Col } from 'antd';
 import { NotificationOutlined, PlusOutlined, DeleteOutlined, InfoCircleOutlined, ThunderboltOutlined, CalendarOutlined } from '@ant-design/icons';
 import { useAuth } from '../../context/AuthContext';
 import announcementService from '../../services/announcementService';
@@ -114,11 +114,9 @@ const AnnouncementPage = () => {
           <Empty description="Chưa có thông báo nào" />
         </Card>
       ) : (
-        <List
-          grid={{ gutter: 24, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item>
+        <Row gutter={[24, 24]}>
+          {data.map((item) => (
+            <Col key={item._id} xs={24} sm={24} md={12} lg={12} xl={8} xxl={6}>
               <Badge.Ribbon 
                 text={item.isUrgent ? 'Khẩn' : getCategoryLabel(item.category)} 
                 color={item.isUrgent ? 'red' : getCategoryColor(item.category)}
@@ -148,9 +146,9 @@ const AnnouncementPage = () => {
                   </div>
                 </Card>
               </Badge.Ribbon>
-            </List.Item>
-          )}
-        />
+            </Col>
+          ))}
+        </Row>
       )}
 
       <Modal
