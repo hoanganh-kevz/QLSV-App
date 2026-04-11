@@ -1,0 +1,73 @@
+{
+  "college": {
+    "id": "CTD",
+    "name": "Trường Công nghệ và Thiết kế UEH",
+    "english_name": "UEH College of Technology and Design",
+    "departments": [
+      {
+        "id": "CTD_D1",
+        "name": "Khoa Toán - Thống kê",
+        "type": "Khoa",
+        "units": [
+          {"id": "SEMS_01", "name": "Chương trình Toán tài chính"},
+          {"id": "SEMS_02", "name": "Chương trình Thống kê kinh doanh"},
+          {"id": "SEMS_03", "name": "Chương trình Phân tích rủi ro và định phí bảo hiểm"},
+          {"id": "SEMS_04", "name": "Chương trình Toán kinh tế"}
+        ]
+      },
+      {
+        "id": "CTD_D2",
+        "name": "Khoa Công nghệ thông tin kinh doanh",
+        "type": "Khoa",
+        "units": [
+          {"id": "BIT_01", "name": "Hệ thống thông tin kinh doanh"},
+          {"id": "BIT_03", "name": "Công nghệ thông tin"},
+          {"id": "BIT_04", "name": "Hệ thống thông tin quản lý"},
+          {"id": "BIT_05", "name": "Khoa học dữ liệu"},
+          {"id": "BIT_06", "name": "Khoa học máy tính"},
+          {"id": "BIT_07", "name": "Kỹ thuật phần mềm"},
+          {"id": "BIT_08", "name": "Thương mại điện tử"},
+          {"id": "BIT_09", "name": "Hệ thống hoạch định nguồn lực doanh nghiệp"},
+          {"id": "BIT_10", "name": "An toàn thông tin"}
+        ]
+      },
+      {
+        "id": "CTD_D3",
+        "name": "Khoa Thiết kế - Truyền thông",
+        "type": "Khoa",
+        "units": [
+          {"id": "SMD_01", "name": "Truyền thông số và Thiết kế đa phương tiện"},
+          {"id": "SMD_02", "name": "Công nghệ nghệ thuật"}
+        ]
+      },
+      {
+        "id": "CTD_D4",
+        "name": "Viện Công nghệ thông minh và tương tác",
+        "type": "Viện",
+        "units": [
+            {"id": "SMI_01", "name": "Công nghệ Logistic"},
+            {"id": "SMI_02", "name": "Điều khiển thông minh và tự động hóa"},
+            {"id": "SMI_03", "name": "Phân tích dữ liệu"},
+            {"id": "SMI_04", "name": "Robot và trí tuệ nhân tạo"}
+        ]
+      },
+      {
+        "id": "CTD_D5",
+        "name": "Viện Đô thị thông minh và Quản lý",
+        "type": "Viện",
+        "units": [
+            {"id": "SIM_01", "name": "Kiến trúc và Đô thị thông minh"}
+        ]
+      },
+      {
+        "id": "CTD_D6",
+        "name": "Viện Đổi mới sáng tạo",
+        "type": "Viện",
+        "units": [
+            {"id": "UI_01", "name": "Công nghệ tài chính"},
+            {"id": "UI_02", "name": "Công nghệ và đổi mới sáng tạo"}
+        ]
+      }
+    ]
+  }
+}

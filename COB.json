@@ -1,0 +1,69 @@
+{
+  "college": {
+    "id": "COB",
+    "name": "Trường Kinh doanh UEH",
+    "departments": [
+      {
+        "id": "COB_D1",
+        "name": "Khoa Quản trị",
+        "units": [
+          {"id": "SOM_01", "name": "Quản trị kinh doanh"},
+          {"id": "SOM_02", "name": "Kinh doanh số"},
+          {"id": "SOM_03", "name": "Quản trị bệnh viện"},
+          {"id": "SOM_04", "name": "Quản trị chất lượng"},
+          {"id": "SOM_05", "name": "Quản trị khởi nghiệp"},
+          {"id": "SOM_06", "name": "Quản trị"}
+        ]
+      },
+      {
+        "id": "COB_D2",
+        "name": "Khoa Kinh doanh Quốc tế - Marketing",
+        "units": [
+          {"id": "IBM_01", "name": "Kinh doanh quốc tế"},
+          {"id": "IBM_02", "name": "Ngoại thương"},
+          {"id": "IBM_03", "name": "Marketing"},
+          {"id": "IBM_04", "name": "Kinh doanh thương mại"},
+          {"id": "IBM_05", "name": "Logistics và Quản lý chuỗi cung ứng"},
+          {"id": "IBM_06", "name": "Công nghệ Marketing"}
+        ]
+      },
+      {
+        "id": "COB_D3",
+        "name": "Khoa Tài chính",
+        "units": [
+          {"id": "SOF_01", "name": "Tài chính"},
+          {"id": "SOF_02", "name": "Bảo hiểm"},
+          {"id": "SOF_03", "name": "Đầu tư tài chính"},
+          {"id": "SOF_04", "name": "Tài chính quốc tế"}
+        ]
+      },
+      {
+        "id": "COB_D4",
+        "name": "Khoa Ngân hàng",
+        "units": [
+          {"id": "SOB_01", "name": "Ngân hàng"},
+          {"id": "SOB_02", "name": "Thị trường chính khoáng"}
+        ]
+      },
+      {
+        "id": "COB_D5",
+        "name": "Khoa Kế toán",
+        "units": [
+          {"id": "SOA_01", "name": "Kế toán công"},
+          {"id": "SOA_02", "name": "Kế toán doanh nghiệp"},
+          {"id": "SOA_03", "name": "Kiểm toán"}
+        ]
+      },
+      {
+        "id": "COB_D6",
+        "name": "Khoa Du lịch",
+        "units": [
+          {"id": "TOU_01", "name": "Quản trị dịch vụ du lịch và lữ hành"},
+          {"id": "TOU_02", "name": "Quản trị khách sạn"},
+          {"id": "TOU_03", "name": "Quản trị sự kiện và dịch vụ giải trí "},
+          {"id": "TOU_04", "name": "Quản trị du thuyền"}
+        ]
+      }
+    ]
+  }
+}

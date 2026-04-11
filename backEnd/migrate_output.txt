@@ -1,0 +1,31 @@
+﻿Found 28 classes to migrate.
+  Updated: KDQT01_K50 -> majorId 69ce0e52224bf475cc567a9a
+  Updated: KDQT02_K50 -> majorId 69ce0e52224bf475cc567a9a
+  Updated: KDQT01_K51 -> majorId 69ce0e52224bf475cc567a9a
+  Updated: KDQT02_K51 -> majorId 69ce0e52224bf475cc567a9a
+  Updated: MKT01_K50 -> majorId 69ce0e52224bf475cc567a9e
+  Updated: MKT02_K50 -> majorId 69ce0e52224bf475cc567a9e
+  Updated: MKT01_K51 -> majorId 69ce0e52224bf475cc567a9e
+  Updated: MKT02_K51 -> majorId 69ce0e52224bf475cc567a9e
+  Updated: QTKD01_K50 -> majorId 69ce0e51224bf475cc567a8c
+  Updated: QTKD02_K50 -> majorId 69ce0e51224bf475cc567a8c
+  Updated: QTKD01_K51 -> majorId 69ce0e51224bf475cc567a8c
+  Updated: QTKD02_K51 -> majorId 69ce0e51224bf475cc567a8c
+  Updated: KT_BUS01_K50 -> majorId 69ce0e53224bf475cc567aba
+  Updated: KT_BUS02_K50 -> majorId 69ce0e53224bf475cc567aba
+  Updated: KT_BUS01_K51 -> majorId 69ce0e53224bf475cc567aba
+  Updated: KT_BUS02_K51 -> majorId 69ce0e53224bf475cc567aba
+  Updated: SE01_K50 -> majorId 69ce0e50224bf475cc567a66
+  Updated: SE02_K50 -> majorId 69ce0e50224bf475cc567a66
+  Updated: SE01_K51 -> majorId 69ce0e50224bf475cc567a66
+  Updated: SE02_K51 -> majorId 69ce0e50224bf475cc567a66
+  Updated: MIS01_K50 -> majorId 69ce0e50224bf475cc567a5c
+  Updated: MIS02_K50 -> majorId 69ce0e50224bf475cc567a5c
+  Updated: MIS01_K51 -> majorId 69ce0e50224bf475cc567a5c
+  Updated: MIS02_K51 -> majorId 69ce0e50224bf475cc567a5c
+  Updated: TKD01_K50 -> majorId 69ce0e50224bf475cc567a68
+  Updated: TKD02_K50 -> majorId 69ce0e50224bf475cc567a68
+  Updated: TKD01_K51 -> majorId 69ce0e50224bf475cc567a68
+  Updated: TKD02_K51 -> majorId 69ce0e50224bf475cc567a68
+
+Migration done: 28 updated, 0 skipped.

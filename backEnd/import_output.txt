@@ -1,0 +1,13 @@
+﻿Importing into College: Tr╞░ß╗¥ng Kinh doanh UEH (69ce0e51224bf475cc567a88)
+Faculty: Khoa Kinh doanh Quß╗æc tß║┐ - Marketing (69ce0e52224bf475cc567a98)
+  OK: GV001 - TS. Th├íi Kim Phß╗Ñng
+  OK: GV002 - TS. Tr╞░╞íng Viß╗çt Ph╞░╞íng
+  OK: GV003 - TS. Nguyß╗àn Mß║ính Tuß║Ñn
+  OK: GV004 - TS. B├╣i Xu├ón Huy
+  OK: GV005 - ThS. Phan Hiß╗ün
+  OK: GV006 - TS. Ng├┤ Tß║Ñn V┼⌐ Khanh
+  OK: GV007 - TS. Nguyß╗àn Quß╗æc H├╣ng
+  OK: GV008 - TS. ─Éß║╖ng Ngß╗ìc Ho├áng Th├ánh
+  OK: GV009 - TS. B├╣i Thanh Hiß║┐u
+
+Done: 9 imported, 0 failed.

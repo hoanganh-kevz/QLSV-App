@@ -1,0 +1,30 @@
+﻿  OK: KDQT01_K50 -> major:Kinh doanh quß╗æc tß║┐ -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: KDQT02_K50 -> major:Kinh doanh quß╗æc tß║┐ -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: KDQT01_K51 -> major:Kinh doanh quß╗æc tß║┐ -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: KDQT02_K51 -> major:Kinh doanh quß╗æc tß║┐ -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: MKT01_K50 -> major:Marketing -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: MKT02_K50 -> major:Marketing -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: MKT01_K51 -> major:Marketing -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: MKT02_K51 -> major:Marketing -> faculty:Khoa Kinh doanh Quß╗æc tß║┐ - Marketing -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: QTKD01_K50 -> major:Quß║ún trß╗ï kinh doanh -> faculty:Khoa Quß║ún trß╗ï -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: QTKD02_K50 -> major:Quß║ún trß╗ï kinh doanh -> faculty:Khoa Quß║ún trß╗ï -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: QTKD01_K51 -> major:Quß║ún trß╗ï kinh doanh -> faculty:Khoa Quß║ún trß╗ï -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: QTKD02_K51 -> major:Quß║ún trß╗ï kinh doanh -> faculty:Khoa Quß║ún trß╗ï -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: KT_BUS01_K50 -> major:Kß║┐ to├ín doanh nghiß╗çp -> faculty:Khoa Kß║┐ to├ín -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: KT_BUS02_K50 -> major:Kß║┐ to├ín doanh nghiß╗çp -> faculty:Khoa Kß║┐ to├ín -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: KT_BUS01_K51 -> major:Kß║┐ to├ín doanh nghiß╗çp -> faculty:Khoa Kß║┐ to├ín -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: KT_BUS02_K51 -> major:Kß║┐ to├ín doanh nghiß╗çp -> faculty:Khoa Kß║┐ to├ín -> college:Tr╞░ß╗¥ng Kinh doanh UEH
+  OK: SE01_K50 -> major:Kß╗╣ thuß║¡t phß║ºn mß╗üm -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: SE02_K50 -> major:Kß╗╣ thuß║¡t phß║ºn mß╗üm -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: SE01_K51 -> major:Kß╗╣ thuß║¡t phß║ºn mß╗üm -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: SE02_K51 -> major:Kß╗╣ thuß║¡t phß║ºn mß╗üm -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: MIS01_K50 -> major:Hß╗ç thß╗æng th├┤ng tin kinh doanh -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: MIS02_K50 -> major:Hß╗ç thß╗æng th├┤ng tin kinh doanh -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: MIS01_K51 -> major:Hß╗ç thß╗æng th├┤ng tin kinh doanh -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: MIS02_K51 -> major:Hß╗ç thß╗æng th├┤ng tin kinh doanh -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: TKD01_K50 -> major:Th╞░╞íng mß║íi ─æiß╗çn tß╗¡ -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: TKD02_K50 -> major:Th╞░╞íng mß║íi ─æiß╗çn tß╗¡ -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: TKD01_K51 -> major:Th╞░╞íng mß║íi ─æiß╗çn tß╗¡ -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+  OK: TKD02_K51 -> major:Th╞░╞íng mß║íi ─æiß╗çn tß╗¡ -> faculty:Khoa C├┤ng nghß╗ç th├┤ng tin kinh doanh -> college:Tr╞░ß╗¥ng C├┤ng nghß╗ç v├á Thiß║┐t kß║┐ UEH
+
+Result: 28 OK, 0 BROKEN

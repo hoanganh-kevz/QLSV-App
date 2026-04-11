@@ -1,0 +1,101 @@
+.dashboard-container {
+  padding: 24px;
+  background: transparent;
+  min-height: calc(100vh - 64px);
+  width: 100%;
+}
+
+.dashboard-header {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.premium-title {
+  font-weight: 800 !important;
+  margin: 0 !important;
+  letter-spacing: -1.5px !important;
+  color: var(--text-color) !important;
+  font-size: 36px !important;
+}
+
+.premium-subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  display: block;
+}
+
+.stat-cards-row {
+  margin-bottom: 32px;
+}
+
+.main-dashboard-row {
+  margin-bottom: 24px;
+}
+
+.card-header {
+  margin-bottom: 8px;
+}
+
+.glass-panel.chart-card-wrapper {
+  padding: 24px;
+  height: 100%;
+}
+
+.glass-panel.activity-card {
+  height: 100%;
+  padding: 24px;
+}
+
+.activity-item {
+  padding: 12px 0 !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+  transform: translateX(4px);
+}
+
+.activity-item:last-child {
+  border-bottom: none !important;
+}
+
+.info-banner {
+  background: var(--brand-gradient) !important;
+  border: none !important;
+  height: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  z-index: 1;
+}
+
+.banner-text {
+  flex: 1;
+}
+
+.banner-icon {
+  opacity: 0.3;
+  margin-right: -40px;
+}
+
+/* Animations from index.css are reused here */
+
+@media (max-width: 992px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
