@@ -1,11 +1,18 @@
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
 
 namespace StudentManagement.API.Swagger
 {
+    /// <summary>
+    /// Cấu hình Swagger/OpenAPI documentation cho API.
+    /// Bao gồm JWT auth, XML comments, và examples.
+    /// </summary>
     public static class SwaggerConfiguration
     {
+        /// <summary>
+        /// Đăng ký Swagger documentation services
+        /// </summary>
         public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -28,10 +35,10 @@ namespace StudentManagement.API.Swagger
                     }
                 });
 
-                // JWT Authentication
+                // JWT Authentication schema
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token in the text input below. Example: 'Bearer 12345abcdef'",
+                    Description = "JWT Authorization header using the Bearer scheme. Enter 'Bearer' [space] and then your token.",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
@@ -54,10 +61,13 @@ namespace StudentManagement.API.Swagger
                     }
                 });
 
-                // Include XML comments
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                // Include XML comments from project
+                string xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                string xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                if (File.Exists(xmlPath))
+                {
+                    c.IncludeXmlComments(xmlPath);
+                }
 
                 // Enable annotations
                 c.EnableAnnotations();
@@ -65,17 +75,9 @@ namespace StudentManagement.API.Swagger
                 // Examples
                 c.ExampleFilters();
 
-                // Group by tags
+                // Group by controller name
                 c.TagActionsBy(api => new[] { api.GroupName ?? api.ActionDescriptor.RouteValues["controller"] });
                 c.DocInclusionPredicate((name, api) => true);
-
-                // Custom operation IDs
-                c.CustomOperationIds(apiDesc =>
-                {
-                    return apiDesc.TryGetMethodInfo(out MethodInfo methodInfo) 
-                        ? $"{methodInfo.DeclaringType.Name}_{methodInfo.Name}" 
-                        : null;
-                });
             });
 
             services.AddSwaggerExamplesFromAssemblyOf<Program>();
@@ -83,6 +85,9 @@ namespace StudentManagement.API.Swagger
             return services;
         }
 
+        /// <summary>
+        /// Cấu hình Swagger UI middleware
+        /// </summary>
         public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
         {
             app.UseSwagger();
@@ -91,17 +96,14 @@ namespace StudentManagement.API.Swagger
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Student Management API V1");
                 c.RoutePrefix = "swagger";
                 c.DocumentTitle = "Student Management API Documentation";
-                
-                // UI customization
-                c.DefaultModelsExpandDepth(-1); // Hide schemas section
+
+                // Tùy chỉnh UI
+                c.DefaultModelsExpandDepth(-1);
                 c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
                 c.DisplayRequestDuration();
                 c.EnableDeepLinking();
                 c.EnableFilter();
                 c.ShowExtensions();
-                
-                // Custom CSS
-                c.InjectStylesheet("/swagger-ui/custom.css");
             });
 
             return app;

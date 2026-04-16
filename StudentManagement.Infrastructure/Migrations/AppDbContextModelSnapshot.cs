@@ -191,7 +191,8 @@ namespace StudentManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("AttendanceRate")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime>("EnrollmentDate")
                         .HasColumnType("datetime2");
@@ -228,6 +229,7 @@ namespace StudentManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<decimal?>("AttendanceScore")
+                        .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -238,9 +240,11 @@ namespace StudentManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal?>("FinalScore")
+                        .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
                     b.Property<decimal>("GradePoint")
+                        .HasPrecision(3, 2)
                         .HasColumnType("decimal(3,2)");
 
                     b.Property<string>("LetterGrade")
@@ -249,6 +253,7 @@ namespace StudentManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(5)");
 
                     b.Property<decimal?>("MidtermScore")
+                        .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
                     b.Property<int>("Semester")
@@ -267,6 +272,7 @@ namespace StudentManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("TotalScore")
+                        .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -308,9 +314,11 @@ namespace StudentManagement.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NewValue")
+                        .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
                     b.Property<decimal>("OldValue")
+                        .HasPrecision(4, 2)
                         .HasColumnType("decimal(4,2)");
 
                     b.Property<string>("Reason")

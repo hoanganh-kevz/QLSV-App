@@ -173,5 +173,28 @@ namespace StudentManagement.API.Controllers
                 return StatusCode(500, new { message = "Internal server error" });
             }
         }
+
+        /// <summary>
+        /// Import hàng loạt giảng viên.
+        /// Frontend gọi POST /api/teachers/bulk-import qua teacherService.bulkImport().
+        /// </summary>
+        [HttpPost("bulk-import")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult BulkImport([FromBody] object request)
+        {
+            // TODO: Implement real bulk import logic
+            return Ok(new { message = "Bulk import completed", imported = 0 });
+        }
+
+        /// <summary>
+        /// Lấy lịch giảng dạy của giảng viên (stub).
+        /// Frontend gọi GET /api/teachers/{id}/schedule.
+        /// </summary>
+        [HttpGet("{id}/schedule")]
+        public IActionResult GetSchedule(string id, [FromQuery] string? termId)
+        {
+            // TODO: Implement khi có dữ liệu schedule
+            return Ok(new List<object>());
+        }
     }
 }

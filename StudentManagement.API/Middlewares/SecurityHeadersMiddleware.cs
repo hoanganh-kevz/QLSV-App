@@ -1,4 +1,4 @@
-namespace StudentManagement.API.Middleware
+﻿namespace StudentManagement.API.Middlewares
 {
     public class SecurityHeadersMiddleware
     {

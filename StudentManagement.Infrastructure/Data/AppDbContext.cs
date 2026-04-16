@@ -149,6 +149,8 @@ namespace StudentManagement.Infrastructure.Data
             modelBuilder.Entity<Enrollment>(entity =>
             {
                 entity.HasKey(e => e.EnrollmentID);
+                entity.Property(e => e.AttendanceRate).HasPrecision(5, 2);
+                
                 entity.HasOne(e => e.Student)
                       .WithMany()
                       .HasForeignKey(e => e.StudentID)
@@ -163,6 +165,12 @@ namespace StudentManagement.Infrastructure.Data
             modelBuilder.Entity<Grade>(entity =>
             {
                 entity.HasKey(e => e.GradeID);
+                entity.Property(e => e.AttendanceScore).HasPrecision(4, 2);
+                entity.Property(e => e.MidtermScore).HasPrecision(4, 2);
+                entity.Property(e => e.FinalScore).HasPrecision(4, 2);
+                entity.Property(e => e.TotalScore).HasPrecision(4, 2);
+                entity.Property(e => e.GradePoint).HasPrecision(3, 2);
+                
                 entity.HasOne(e => e.Enrollment)
                       .WithOne(e => e.Grade)
                       .HasForeignKey<Grade>(e => e.EnrollmentID)
@@ -181,6 +189,9 @@ namespace StudentManagement.Infrastructure.Data
             modelBuilder.Entity<GradeHistory>(entity =>
             {
                 entity.HasKey(e => e.HistoryID);
+                entity.Property(e => e.OldValue).HasPrecision(4, 2);
+                entity.Property(e => e.NewValue).HasPrecision(4, 2);
+                
                 entity.HasOne(e => e.Grade)
                       .WithMany(g => g.GradeHistories)
                       .HasForeignKey(e => e.GradeID)

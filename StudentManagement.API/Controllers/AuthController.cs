@@ -83,7 +83,46 @@ namespace StudentManagement.API.Controllers
         }
 
         /// <summary>
-        /// Change password
+        /// Lấy thông tin user hiện tại từ JWT token.
+        /// Frontend AuthProvider gọi endpoint này khi khởi động để verify token.
+        /// </summary>
+        [HttpGet("me")]
+        [Authorize]
+        public ActionResult<object> GetCurrentUser()
+        {
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? username = User.FindFirst(ClaimTypes.Name)?.Value;
+            string? role = User.FindFirst(ClaimTypes.Role)?.Value;
+            string? fullName = User.FindFirst("FullName")?.Value;
+            string? email = User.FindFirst("Email")?.Value;
+            string? personId = User.FindFirst("PersonId")?.Value;
+
+            return Ok(new
+            {
+                id = userId,
+                personId,
+                username,
+                role = role?.ToLower(),
+                fullName,
+                name = fullName,
+                email
+            });
+        }
+
+        /// <summary>
+        /// Cập nhật thông tin profile của user hiện tại.
+        /// Frontend ProfilePage gọi PUT /api/auth/profile.
+        /// </summary>
+        [HttpPut("profile")]
+        [Authorize]
+        public async Task<IActionResult> UpdateProfile([FromBody] object profileData)
+        {
+            // TODO: Implement profile update logic khi cần
+            return Ok(new { message = "Profile updated successfully" });
+        }
+
+        /// <summary>
+        /// Đổi mật khẩu cho user hiện tại.
         /// </summary>
         [HttpPut("change-password")]
         [Authorize]
@@ -104,6 +143,37 @@ namespace StudentManagement.API.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
+        }
+
+        /// <summary>
+        /// Google OAuth login (stub — chưa triển khai xác thực Google thực tế).
+        /// Frontend có nút "Login with Google", endpoint này trả lỗi cho đến khi có Google OAuth.
+        /// </summary>
+        [HttpPost("google")]
+        [AllowAnonymous]
+        public IActionResult GoogleLogin([FromBody] object googleData)
+        {
+            return StatusCode(501, new { message = "Google authentication is not yet configured. Please use username/password login." });
+        }
+
+        /// <summary>
+        /// Yêu cầu đặt lại mật khẩu (stub — chưa triển khai gửi OTP qua email).
+        /// </summary>
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword([FromBody] object data)
+        {
+            return StatusCode(501, new { message = "Forgot password feature is not yet configured." });
+        }
+
+        /// <summary>
+        /// Đặt lại mật khẩu bằng OTP (stub — chưa triển khai).
+        /// </summary>
+        [HttpPost("reset-password")]
+        [AllowAnonymous]
+        public IActionResult ResetPassword([FromBody] object data)
+        {
+            return StatusCode(501, new { message = "Reset password feature is not yet configured." });
         }
     }
 }

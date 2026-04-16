@@ -1,4 +1,4 @@
-## .NET
+﻿## .NET
 bin/
 obj/
 *.user
@@ -11,14 +11,34 @@ obj/
 ## IDE
 .vs/
 .vscode/
+.idea/
 *.swp
 
 ## Logs
 logs/
 *.log
 
-## Environment
-appsettings.Development.json
+## Build artifacts
+build_output.txt
+build_errors.txt
+out.txt
+out2.txt
+errors.txt
+errors2.txt
+warnings.txt
+full_build_log.txt
+
+## Environment (keep appsettings.Development.json for dev setup)
+# appsettings.Development.json
+
+## Frontend / Node.js
+node_modules/
+dist/
+.env.local
+.env.production
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 ## OS
 Thumbs.db

@@ -1,106 +1,109 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using HealthChecks.UI.Client;
+﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Text.Json;
 
 namespace StudentManagement.API.Configuration
 {
+    /// <summary>
+    /// Cấu hình Health Checks cho hệ thống.
+    /// Kiểm tra SQL Server, memory, disk space.
+    /// </summary>
     public static class HealthCheckConfiguration
     {
-        public static IServiceCollection AddHealthChecks(
+        /// <summary>
+        /// Đăng ký health checks: SQL Server, Memory, Disk Space
+        /// </summary>
+        public static IServiceCollection AddCustomHealthChecks(
             this IServiceCollection services,
             IConfiguration configuration)
         {
             services.AddHealthChecks()
-                // Database health check
                 .AddSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
+                    configuration.GetConnectionString("DefaultConnection")!,
                     name: "SQL Server",
                     failureStatus: HealthStatus.Degraded,
                     tags: new[] { "db", "sql", "sqlserver" })
-                
-                // Redis health check (if using caching)
-                .AddRedis(
-                    configuration["Redis:ConnectionString"],
-                    name: "Redis Cache",
-                    failureStatus: HealthStatus.Degraded,
-                    tags: new[] { "cache", "redis" })
-                
-                // Custom health checks
                 .AddCheck<ApiHealthCheck>("API Health")
                 .AddCheck<MemoryHealthCheck>("Memory")
                 .AddCheck<DiskSpaceHealthCheck>("Disk Space");
 
-            // Health checks UI
-            services.AddHealthChecksUI(setup =>
-            {
-                setup.SetEvaluationTimeInSeconds(30);
-                setup.MaximumHistoryEntriesPerEndpoint(50);
-                setup.AddHealthCheckEndpoint("API", "/health");
-            })
-            .AddInMemoryStorage();
-
             return services;
         }
 
+        /// <summary>
+        /// Map health check endpoints: /health, /health/ready, /health/live
+        /// </summary>
         public static void MapHealthCheckEndpoints(this WebApplication app)
         {
             app.MapHealthChecks("/health", new HealthCheckOptions
             {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = WriteHealthCheckResponse
             });
 
             app.MapHealthChecks("/health/ready", new HealthCheckOptions
             {
-                Predicate = check => check.Tags.Contains("ready"),
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                Predicate = check => check.Tags.Contains("db"),
+                ResponseWriter = WriteHealthCheckResponse
             });
 
             app.MapHealthChecks("/health/live", new HealthCheckOptions
             {
-                Predicate = _ => false,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                Predicate = _ => false
             });
+        }
 
-            app.MapHealthChecksUI(options => options.UIPath = "/health-ui");
+        /// <summary>
+        /// Viết response JSON cho health check endpoint
+        /// </summary>
+        private static async Task WriteHealthCheckResponse(HttpContext context, HealthReport report)
+        {
+            context.Response.ContentType = "application/json";
+            var response = new
+            {
+                status = report.Status.ToString(),
+                totalDuration = report.TotalDuration.TotalMilliseconds,
+                checks = report.Entries.Select(entry => new
+                {
+                    name = entry.Key,
+                    status = entry.Value.Status.ToString(),
+                    duration = entry.Value.Duration.TotalMilliseconds,
+                    description = entry.Value.Description,
+                    data = entry.Value.Data
+                })
+            };
+            await context.Response.WriteAsJsonAsync(response);
         }
     }
 
-    // Custom health checks
+    /// <summary>
+    /// Health check cơ bản cho API
+    /// </summary>
     public class ApiHealthCheck : IHealthCheck
     {
         public Task<HealthCheckResult> CheckHealthAsync(
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
         {
-            // Check API dependencies
-            var isHealthy = true; // Your logic here
-
-            if (isHealthy)
-            {
-                return Task.FromResult(
-                    HealthCheckResult.Healthy("API is healthy"));
-            }
-
-            return Task.FromResult(
-                new HealthCheckResult(
-                    context.Registration.FailureStatus,
-                    "API is unhealthy"));
+            return Task.FromResult(HealthCheckResult.Healthy("API is healthy"));
         }
     }
 
+    /// <summary>
+    /// Kiểm tra memory usage (cảnh báo nếu > 1GB)
+    /// </summary>
     public class MemoryHealthCheck : IHealthCheck
     {
         public Task<HealthCheckResult> CheckHealthAsync(
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
         {
-            var allocated = GC.GetTotalMemory(forceFullCollection: false);
+            long allocated = GC.GetTotalMemory(forceFullCollection: false);
             var data = new Dictionary<string, object>
             {
                 { "AllocatedMB", allocated / 1024 / 1024 }
             };
 
-            var threshold = 1024 * 1024 * 1024; // 1GB
+            long threshold = 1024L * 1024 * 1024; // 1GB
 
             return Task.FromResult(allocated < threshold
                 ? HealthCheckResult.Healthy("Memory usage is normal", data)
@@ -108,14 +111,17 @@ namespace StudentManagement.API.Configuration
         }
     }
 
+    /// <summary>
+    /// Kiểm tra dung lượng ổ đĩa (cảnh báo nếu < 10GB)
+    /// </summary>
     public class DiskSpaceHealthCheck : IHealthCheck
     {
         public Task<HealthCheckResult> CheckHealthAsync(
             HealthCheckContext context,
             CancellationToken cancellationToken = default)
         {
-            var drive = new DriveInfo("C");
-            var freeSpaceGB = drive.AvailableFreeSpace / 1024 / 1024 / 1024;
+            DriveInfo drive = new DriveInfo("C");
+            long freeSpaceGB = drive.AvailableFreeSpace / 1024 / 1024 / 1024;
 
             var data = new Dictionary<string, object>
             {

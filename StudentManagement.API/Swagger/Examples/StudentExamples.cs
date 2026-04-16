@@ -1,10 +1,13 @@
-using Swashbuckle.AspNetCore.Annotations;
-using Swashbuckle.AspNetCore.Filters;
+﻿using Swashbuckle.AspNetCore.Filters;
 using StudentManagement.Core.DTOs.Student;
 using StudentManagement.Core.DTOs.Grade;
+using StudentManagement.Core.Enums;
 
 namespace StudentManagement.API.Swagger.Examples
 {
+    /// <summary>
+    /// Swagger example cho CreateStudentDto request
+    /// </summary>
     public class CreateStudentExample : IExamplesProvider<CreateStudentDto>
     {
         public CreateStudentDto GetExamples()
@@ -29,6 +32,9 @@ namespace StudentManagement.API.Swagger.Examples
         }
     }
 
+    /// <summary>
+    /// Swagger example cho StudentDto response
+    /// </summary>
     public class StudentResponseExample : IExamplesProvider<StudentDto>
     {
         public StudentDto GetExamples()
@@ -62,6 +68,9 @@ namespace StudentManagement.API.Swagger.Examples
         }
     }
 
+    /// <summary>
+    /// Swagger example cho GradeDto response
+    /// </summary>
     public class GradeResponseExample : IExamplesProvider<GradeDto>
     {
         public GradeDto GetExamples()

@@ -28,8 +28,11 @@ namespace StudentManagement.API.Controllers
         [HttpGet("stats")]
         public async Task<IActionResult> GetStats()
         {
-            DashboardStatsDto stats = await _dashboardService.GetAdvancedStatsAsync();
-            return Ok(stats);
+            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "Admin";
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+            
+            object stats = await _dashboardService.GetRoleBasedStatsAsync(role.ToLower(), userId);
+            return Ok(new { success = true, data = stats });
         }
 
         /// <summary>

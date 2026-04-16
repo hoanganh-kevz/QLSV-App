@@ -57,7 +57,7 @@ namespace StudentManagement.Services.Services
             {
                 Token = token,
                 Username = account.Username,
-                Role = account.Role.ToString(),
+                Role = account.Role.ToString().ToLower(),
                 FullName = person.FullName,
                 Email = person.Email,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes)
@@ -153,7 +153,7 @@ namespace StudentManagement.Services.Services
                 {
                     Token = token,
                     Username = account.Username,
-                    Role = account.Role.ToString(),
+                    Role = account.Role.ToString().ToLower(),
                     FullName = person.FullName,
                     Email = person.Email,
                     ExpiresAt = DateTime.UtcNow.AddMinutes(expiryMinutes)

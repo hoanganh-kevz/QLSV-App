@@ -244,31 +244,27 @@ namespace StudentManagement.Infrastructure.Data
             }
             await context.SaveChangesAsync();
 
-            // ── 9. Create Enrollments ──
+            // ── 9. Create Enrollments and incoming 10. Grades ──
             List<Enrollment> enrollments = new List<Enrollment>();
-            for (int i = 0; i < studentIds.Count && i < 30; i++)
-            {
-                Enrollment enrollment = new Enrollment
-                {
-                    StudentID = studentIds[i],
-                    SectionID = sections[i % sections.Count].SectionID,
-                    Status = "Registered"
-                };
-                enrollments.Add(enrollment);
-                context.Enrollments.Add(enrollment);
-            }
-            await context.SaveChangesAsync();
-
-            // ── 10. Create 220+ Grade records ──
             int gradeCount = 0;
+
             for (int s = 0; s < Math.Min(studentIds.Count, 50); s++)
             {
-                // Each student gets 4-5 grades across different subjects
-                int numGrades = 4 + (s % 2);
-                for (int g = 0; g < numGrades; g++)
+                // Each student gets 4-5 enrollments/grades across different subjects
+                int numCourses = 4 + (s % 2);
+                for (int c = 0; c < numCourses; c++)
                 {
-                    int subjectIdx = (s + g) % subjects.Count;
-                    int sectionIdx = (s + g) % sections.Count;
+                    int subjectIdx = (s + c) % subjects.Count;
+                    int sectionIdx = (s + c) % sections.Count;
+
+                    Enrollment enrollment = new Enrollment
+                    {
+                        StudentID = studentIds[s],
+                        SectionID = sections[sectionIdx].SectionID,
+                        Status = "Completed"
+                    };
+                    enrollments.Add(enrollment);
+                    context.Enrollments.Add(enrollment);
 
                     double attendance = Math.Round(3.0 + rng.NextDouble() * 7.0, 1);
                     double midterm = Math.Round(2.0 + rng.NextDouble() * 8.0, 1);
@@ -279,18 +275,16 @@ namespace StudentManagement.Infrastructure.Data
                     midterm = Math.Min(10.0, Math.Max(0.0, midterm));
                     finalScore = Math.Min(10.0, Math.Max(0.0, finalScore));
 
-                    string enrollmentId = enrollments
-                        .FirstOrDefault(e => e.StudentID == studentIds[s] && e.SectionID == sections[sectionIdx].SectionID)?.EnrollmentID 
-                        ?? Guid.NewGuid().ToString();
-
                     Grade grade = new Grade
                     {
+                        GradeID = Guid.NewGuid().ToString(), // Assign ID explicitely
                         StudentID = studentIds[s],
                         SubjectID = subjects[subjectIdx].SubjectID,
-                        Semester = g < 3 ? 1 : 2,
-                        EnrollmentID = enrollmentId,
+                        Semester = c < 3 ? 1 : 2,
+                        EnrollmentID = enrollment.EnrollmentID, 
                         AcademicYear = "2024-2025"
                     };
+                    
                     grade.UpdateComponent("Attendance", (decimal)attendance, "System");
                     grade.UpdateComponent("Midterm", (decimal)midterm, "System");
                     grade.UpdateComponent("Final", (decimal)finalScore, "System");

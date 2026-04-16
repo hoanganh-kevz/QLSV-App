@@ -1,6 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace StudentManagement.API.Middleware
+namespace StudentManagement.API.Middlewares
 {
     public class PerformanceMonitoringMiddleware
     {

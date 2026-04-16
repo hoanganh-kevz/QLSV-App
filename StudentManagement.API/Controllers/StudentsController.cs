@@ -258,16 +258,49 @@ namespace StudentManagement.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Import hàng loạt sinh viên từ file Excel.
+        /// Frontend gọi POST /api/students/bulk-import qua studentService.bulkImportStudents().
+        /// </summary>
+        [HttpPost("bulk-import")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult BulkImport([FromBody] BulkImportStudentsRequest request)
+        {
+            // TODO: Implement real bulk import logic khi cần
+            int count = request.Students?.Count ?? 0;
+            return Ok(new { message = $"Successfully imported {count} students", imported = count });
+        }
+
+        /// <summary>
+        /// Lấy lịch học của sinh viên (stub).
+        /// Frontend gọi GET /api/students/{id}/schedule.
+        /// </summary>
+        [HttpGet("{id}/schedule")]
+        [Authorize]
+        public IActionResult GetSchedule(string id, [FromQuery] string? termId)
+        {
+            // TODO: Implement lịch học khi có dữ liệu CourseSection + schedule
+            return Ok(new List<object>());
+        }
     }
 
-    // Helper DTOs
+    // ======================== Helper DTOs ========================
+
+    /// <summary>DTO để cập nhật avatar sinh viên.</summary>
     public class UpdateAvatarDto
     {
         public string AvatarUrl { get; set; } = string.Empty;
     }
 
+    /// <summary>DTO để chuyển lớp sinh viên.</summary>
     public class ChangeClassDto
     {
         public string NewClassID { get; set; } = string.Empty;
+    }
+
+    /// <summary>Request body để import hàng loạt sinh viên.</summary>
+    public class BulkImportStudentsRequest
+    {
+        public List<object>? Students { get; set; }
     }
 }

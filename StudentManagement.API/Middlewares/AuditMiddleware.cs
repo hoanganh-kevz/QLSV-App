@@ -1,6 +1,6 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace StudentManagement.API.Middleware
+namespace StudentManagement.API.Middlewares
 {
     public class AuditMiddleware
     {
